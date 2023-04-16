@@ -8,10 +8,10 @@ import java.util.List;
 
 @Entity
 @Getter
-public class User {
+public class Member {
 
     @Id @GeneratedValue
-    @Column(name = "USER_ID")
+    @Column(name = "MEMBER_ID")
     private Long id;
 
     private String loginId;
@@ -29,7 +29,7 @@ public class User {
 
     private String nickname;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "member")
     private List<Resume> resumes = new ArrayList<>();
 
 }

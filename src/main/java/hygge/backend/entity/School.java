@@ -21,5 +21,5 @@ public class School {
     private String emailForm;
 
     @OneToMany(mappedBy = "school")
-    private List<User> users = new ArrayList<>();
+    private List<Member> members = new ArrayList<>();
 }

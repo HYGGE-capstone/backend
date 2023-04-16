@@ -1,7 +1,6 @@
 package hygge.backend.entity;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -16,8 +15,8 @@ public class Resume {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
     private String content;
 
