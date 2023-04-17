@@ -45,4 +45,5 @@ public class MemberRepositoryTest {
         assertThat(result.getRole()).isEqualTo(ROLE_USER);
         assertThat(result.getNickname()).isEqualTo("test_nickname");
     }
+
 }
