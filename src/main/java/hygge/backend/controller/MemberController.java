@@ -5,10 +5,9 @@ import hygge.backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/member")
@@ -20,10 +19,15 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupDto signupDto) {
         if (memberService.signup(signupDto)) {
-            return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
+            return new ResponseEntity<>("회원가입 성공", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("로그인 실패",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("회원가입 실패",HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/findid/{email}")
+    public ResponseEntity<?> findId(@PathVariable String email) {
+        return memberService.findId(email);
     }
 }
 
