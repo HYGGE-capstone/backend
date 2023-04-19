@@ -1,4 +1,4 @@
-package hygge.backend.dto;
+package hygge.backend.dto.response;
 
 import lombok.Data;
 

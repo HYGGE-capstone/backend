@@ -1,7 +1,9 @@
 package hygge.backend.controller;
 
-import hygge.backend.dto.SignupRequest;
-import hygge.backend.dto.SignupResponse;
+import hygge.backend.dto.request.SignupRequest;
+import hygge.backend.dto.response.EmailResponse;
+import hygge.backend.dto.response.LoginIdResponse;
+import hygge.backend.dto.response.SignupResponse;
 import hygge.backend.exception.DuplicateException;
 import hygge.backend.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,16 +44,27 @@ public class MemberController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "이메일 중복 검사 메서드", description = "입력한 이메일이 이미 존재하는지 확인합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "입력한 이메일은 사용가능 합니다.",
+                    content = @Content(schema = @Schema(implementation = EmailResponse.class))),
+            @ApiResponse(responseCode = "400", description = "입력한 이메일은 이미 존재합니다.")
+    })
     @GetMapping("/signup/email/{email}")
-    public ResponseEntity checkEmail(@PathVariable String email){
+    public ResponseEntity<EmailResponse> checkEmail(@PathVariable String email){
         return memberService.checkEmail(email);
     }
 
-    @GetMapping("/signup/loginid/{loginId}")
-    public ResponseEntity checkLoginId(@PathVariable String loginId){
+    @Operation(summary = "로그인 아이디 중복 검사 메서드", description = "입력한 로그인 아이디가 이미 존재하는지 확인합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "입력한 로그인 아이디는 사용가능 합니다.",
+                    content = @Content(schema = @Schema(implementation = LoginIdResponse.class))),
+            @ApiResponse(responseCode = "400", description = "입력한 로그인 아이디는 이미 존재합니다.")
+    })
+    @GetMapping("/signup/loginId/{loginId}")
+    public ResponseEntity<LoginIdResponse> checkLoginId(@PathVariable String loginId){
         return memberService.checkLoginId(loginId);
     }
-
 
 
     @GetMapping("/findid/{email}")

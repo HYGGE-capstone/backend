@@ -1,7 +1,9 @@
 package hygge.backend.service;
 
-import hygge.backend.dto.SignupRequest;
-import hygge.backend.dto.SignupResponse;
+import hygge.backend.dto.request.SignupRequest;
+import hygge.backend.dto.response.EmailResponse;
+import hygge.backend.dto.response.LoginIdResponse;
+import hygge.backend.dto.response.SignupResponse;
 import hygge.backend.entity.Member;
 import hygge.backend.exception.DuplicateException;
 import hygge.backend.repository.MemberRepository;
@@ -37,20 +39,24 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity checkEmail(String email) {
+    public ResponseEntity<EmailResponse> checkEmail(String email) {
+        EmailResponse response = new EmailResponse();
+        response.setEmail(email);
         if(memberRepository.existsByEmail(email)){
-            return new ResponseEntity(email, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
         }else {
-            return new ResponseEntity(email, HttpStatus.OK);
+            return new ResponseEntity(response, HttpStatus.OK);
         }
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity checkLoginId(String loginId) {
+    public ResponseEntity<LoginIdResponse> checkLoginId(String loginId) {
+        LoginIdResponse response = new LoginIdResponse();
+        response.setLoginId(loginId);
         if (memberRepository.existsByLoginId(loginId)) {
-            return new ResponseEntity(loginId, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
         }else{
-            return new ResponseEntity(loginId, HttpStatus.OK);
+            return new ResponseEntity(response, HttpStatus.OK);
         }
     }
 

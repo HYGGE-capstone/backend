@@ -1,4 +1,4 @@
-package hygge.backend.dto;
+package hygge.backend.dto.request;
 
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Role;
