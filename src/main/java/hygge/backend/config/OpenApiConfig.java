@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI openAPI(@Value("${springdic.version}") String springdocVersion) {
+    public OpenAPI openAPI(@Value("${springdoc.version}") String springdocVersion) {
         Info info = new Info()
                 .title("아주좋은팀 API")
                 .version(springdocVersion)

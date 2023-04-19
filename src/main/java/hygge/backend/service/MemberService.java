@@ -1,7 +1,9 @@
 package hygge.backend.service;
 
-import hygge.backend.dto.SignupDto;
+import hygge.backend.dto.SignupRequest;
+import hygge.backend.dto.SignupResponse;
 import hygge.backend.entity.Member;
+import hygge.backend.exception.DuplicateException;
 import hygge.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,17 +19,21 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public boolean signup(SignupDto signupDto) {
-        if (memberRepository.existsByEmail(signupDto.getEmail())) {
-            return false;
+    public SignupResponse signup(SignupRequest signupRequest) throws RuntimeException {
+        if (memberRepository.existsByEmail(signupRequest.getEmail())) {  // 이메일 중복
+            throw new DuplicateException();
         }
-        else if (memberRepository.existsByLoginId(signupDto.getLoginId())) {
-            return false;
+        else if (memberRepository.existsByLoginId(signupRequest.getLoginId())) {  // 로그인 아이디 중복
+            throw new DuplicateException();
         }
-        Member member = signupDto.toMember();
+        Member member = signupRequest.toMember();
         memberRepository.save(member);
 
-        return true;
+        SignupResponse response = new SignupResponse();
+        response.setLoginId(member.getLoginId());
+        response.setEmail(member.getEmail());
+
+        return response;
     }
 
     @Transactional(readOnly = true)

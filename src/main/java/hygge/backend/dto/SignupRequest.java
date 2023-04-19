@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class SignupDto {
+public class SignupRequest {
 
     private String loginId;
 
@@ -21,7 +21,7 @@ public class SignupDto {
     private String nickname;
 
     @Builder
-    public SignupDto(String loginId, String email, String password, String nickname) {
+    public SignupRequest(String loginId, String email, String password, String nickname) {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
