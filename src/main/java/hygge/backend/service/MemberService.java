@@ -37,6 +37,24 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
+    public ResponseEntity checkEmail(String email) {
+        if(memberRepository.existsByEmail(email)){
+            return new ResponseEntity(email, HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity(email, HttpStatus.OK);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity checkLoginId(String loginId) {
+        if (memberRepository.existsByLoginId(loginId)) {
+            return new ResponseEntity(loginId, HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity(loginId, HttpStatus.OK);
+        }
+    }
+
+    @Transactional(readOnly = true)
     public ResponseEntity<?> findId(String email) {
         Optional<Member> foundMember = memberRepository.findByEmail(email);
         if (foundMember.isPresent()) {

@@ -42,6 +42,18 @@ public class MemberController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @GetMapping("/signup/email/{email}")
+    public ResponseEntity checkEmail(@PathVariable String email){
+        return memberService.checkEmail(email);
+    }
+
+    @GetMapping("/signup/loginid/{loginId}")
+    public ResponseEntity checkLoginId(@PathVariable String loginId){
+        return memberService.checkLoginId(loginId);
+    }
+
+
+
     @GetMapping("/findid/{email}")
     public ResponseEntity<?> findId(@PathVariable String email) {
         return memberService.findId(email);
