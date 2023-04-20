@@ -1,9 +1,9 @@
 package hygge.backend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
@@ -15,24 +15,6 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender emailSender;
-
-    public static final String code = createCode();
-
-    private MimeMessage createMessage(String to) throws Exception {
-        MimeMessage message = emailSender.createMimeMessage();
-
-        message.addRecipients(Message.RecipientType.TO, to);  // 받는 사람
-        message.setSubject("[아주좋은팀]회원가입 인증 이메일");  // 제목
-
-        String msgg = "";
-        msgg+="<div><h2>회원 가입 인증 코드 입니다.</h2>";
-        msgg+="CODE : <strong>";
-        msgg+=code+"</strong></div>";
-        message.setText(msgg, "utf-8", "html");  // 내용
-        message.setFrom(new InternetAddress("ajou.sw.hygge@gmail.com", "아주좋은팀"));  // 보내는 사람
-
-        return message;
-    }
 
     public static String createCode() {
         StringBuffer key = new StringBuffer();
@@ -61,7 +43,21 @@ public class EmailService {
     }
 
     public String sendEmail(String to) throws Exception {
-        MimeMessage message = createMessage(to);
+        final String code = createCode();
+
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+
+        String msgg = "";
+        msgg+="<div><h2>회원 가입 인증 코드 입니다.</h2>";
+        msgg+="CODE : <strong>";
+        msgg+=code+"</strong></div>";
+
+        helper.setTo(to);
+        helper.setFrom("ajou.sw.hygge@gmail.com");
+        helper.setSubject("[아주좋은팀]회원가입 인증 이메일");
+        helper.setText(msgg, true);
+
         try {
             emailSender.send(message);
         } catch (MailException e) {

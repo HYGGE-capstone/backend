@@ -71,7 +71,7 @@ public class MemberController {
     }
 
     @PostMapping("/signup/email/auth")
-    public String sendEmail(@RequestBody String to) throws Exception {
+    public String sendEmail(@RequestParam String to) throws Exception {
         return emailService.sendEmail(to);
     }
 
