@@ -66,7 +66,6 @@ public class MemberController {
         return memberService.checkLoginId(loginId);
     }
 
-
     @GetMapping("/findid/{email}")
     public ResponseEntity<?> findId(@PathVariable String email) {
         return memberService.findId(email);
