@@ -1,5 +1,6 @@
 package hygge.backend.service;
 
+import hygge.backend.dto.request.LoginRequest;
 import hygge.backend.dto.request.SignupRequest;
 import hygge.backend.dto.response.EmailResponse;
 import hygge.backend.dto.response.LoginIdResponse;
@@ -10,6 +11,9 @@ import hygge.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public SignupResponse signup(SignupRequest signupRequest) throws RuntimeException {
@@ -28,7 +33,8 @@ public class MemberService {
         else if (memberRepository.existsByLoginId(signupRequest.getLoginId())) {  // 로그인 아이디 중복
             throw new DuplicateException();
         }
-        Member member = signupRequest.toMember();
+
+        Member member = signupRequest.toMember(passwordEncoder);
         memberRepository.save(member);
 
         SignupResponse response = new SignupResponse();
@@ -69,5 +75,10 @@ public class MemberService {
         } else {
             return new ResponseEntity<>("아이디 찾기 실패", HttpStatus.NOT_FOUND);
         }
+    }
+
+    public void login(LoginRequest loginRequest) {
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(loginRequest.getLoginId(), loginRequest.getPassword());
     }
 }

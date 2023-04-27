@@ -5,6 +5,7 @@ import hygge.backend.dto.response.EmailResponse;
 import hygge.backend.dto.response.LoginIdResponse;
 import hygge.backend.dto.response.SignupResponse;
 import hygge.backend.exception.DuplicateException;
+import hygge.backend.jwt.JwtService;
 import hygge.backend.service.EmailService;
 import hygge.backend.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,16 +19,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Email;
-
 @Tag(name = "회원", description = "회원 관련 api 입니다.")
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/api/v1/member")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
     private final EmailService emailService;
+    private final JwtService jwtService;
 
     @Operation(summary = "회원가입 메서드", description = "회원가입 메서드입니다.")
     @ApiResponses(value = {
@@ -79,5 +79,6 @@ public class MemberController {
     public ResponseEntity<?> findId(@PathVariable String email) {
         return memberService.findId(email);
     }
+
 }
 

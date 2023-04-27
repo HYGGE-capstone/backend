@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @NoArgsConstructor
@@ -28,11 +29,11 @@ public class SignupRequest {
         this.nickname = nickname;
     }
 
-    public Member toMember() {
+    public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .loginId(loginId)
                 .email(email)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .nickname(nickname)
                 .role(Role.ROLE_USER)
                 .build();
