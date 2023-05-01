@@ -39,15 +39,8 @@ public class Member {
 
     private String nickname;
 
-
-    private String refreshToken;
-
     @OneToMany(mappedBy = "member")
     private List<Resume> resumes = new ArrayList<>();
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
 
 
 }
