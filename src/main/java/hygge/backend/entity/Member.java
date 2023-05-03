@@ -1,22 +1,18 @@
 package hygge.backend.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "MEMBER_ID")
     private Long id;
 
@@ -42,5 +38,25 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Resume> resumes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<Subscribe> subscribes = new ArrayList<>();
 
+    // 빌더
+    @Builder
+    public Member(String loginId, String email, String password, String nickname, Role role) {
+        this.loginId = loginId;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.role = role;
+    }
+
+    // 비즈니스 메서드
+    public void addSubscribe(Subscribe subscribe) {
+        this.subscribes.add(subscribe);
+    }
+
+    public void deleteSubscribe(Subscribe subscribe) {
+        this.subscribes.remove(subscribe);
+    }
 }

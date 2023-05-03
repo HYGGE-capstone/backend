@@ -3,6 +3,7 @@ package hygge.backend.controller;
 import hygge.backend.dto.TokenDto;
 import hygge.backend.dto.request.LoginRequest;
 import hygge.backend.dto.request.SignupRequest;
+import hygge.backend.dto.response.CodeResponse;
 import hygge.backend.dto.response.EmailResponse;
 import hygge.backend.dto.response.LoginIdResponse;
 import hygge.backend.dto.response.SignupResponse;
@@ -72,8 +73,9 @@ public class MemberController {
 
     // 이메일 인증 메서드
     @PostMapping("/signup/email/auth")
-    public String sendEmail(@RequestParam String to) throws Exception {
-        return emailService.sendEmail(to);
+    public ResponseEntity<CodeResponse> sendEmail(@RequestParam String to) throws Exception {
+        CodeResponse code = emailService.sendEmail(to);
+        return ResponseEntity.ok(code);
     }
 
     // 아이디 찾기 메서드

@@ -1,5 +1,6 @@
 package hygge.backend.entity;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "refresh_token")
 @Entity
 public class RefreshToken {

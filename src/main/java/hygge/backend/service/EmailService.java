@@ -1,10 +1,13 @@
 package hygge.backend.service;
 
+import hygge.backend.dto.response.CodeResponse;
+import hygge.backend.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
@@ -15,6 +18,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender emailSender;
+    private final SchoolRepository schoolRepository;
 
     public static String createCode() {
         StringBuffer key = new StringBuffer();
@@ -42,7 +46,12 @@ public class EmailService {
         return key.toString();
     }
 
-    public String sendEmail(String to) throws Exception {
+    public CodeResponse sendEmail(String to) throws Exception {
+
+        if (!emailIsValidate(to)) {
+            throw new RuntimeException("등록되지 않은 이메일 형식입니다.");
+        }
+
         final String code = createCode();
 
         MimeMessage message = emailSender.createMimeMessage();
@@ -64,6 +73,16 @@ public class EmailService {
             e.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return code;
+        return new CodeResponse(code);
     }
+
+    @Transactional(readOnly = true)
+    public boolean emailIsValidate(String email) {
+        // 이메일을 @ 기준으로 나눠서 이메일 폼만 저장한다.
+        int index = email.lastIndexOf("@") + 1;
+        String emailForm = email.substring(index);
+        // 학교에서 해당하는 이메일 폼이 있는지 확인한다.
+        return schoolRepository.existsByEmailForm(emailForm);
+    }
+
 }

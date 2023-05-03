@@ -1,5 +1,6 @@
 package hygge.backend.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,8 +8,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class School {
 
     @Id @GeneratedValue
