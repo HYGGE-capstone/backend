@@ -3,10 +3,7 @@ package hygge.backend.controller;
 import hygge.backend.dto.TokenDto;
 import hygge.backend.dto.request.LoginRequest;
 import hygge.backend.dto.request.SignupRequest;
-import hygge.backend.dto.response.CodeResponse;
-import hygge.backend.dto.response.EmailResponse;
-import hygge.backend.dto.response.LoginIdResponse;
-import hygge.backend.dto.response.SignupResponse;
+import hygge.backend.dto.response.*;
 import hygge.backend.error.exception.DuplicateException;
 import hygge.backend.service.EmailService;
 import hygge.backend.service.MemberService;
@@ -33,9 +30,7 @@ public class MemberController {
     @Operation(summary = "회원가입 메서드", description = "회원가입 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입 성공",
-                    content = @Content(schema = @Schema(implementation = SignupResponse.class))),
-            @ApiResponse(responseCode = "400", description = "중복된 이메일 또는 아이디"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+                    content = @Content(schema = @Schema(implementation = SignupResponse.class)))
     })
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest) {
@@ -52,8 +47,7 @@ public class MemberController {
     @Operation(summary = "이메일 중복 검사 메서드", description = "입력한 이메일이 이미 존재하는지 확인합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "입력한 이메일은 사용가능 합니다.",
-                    content = @Content(schema = @Schema(implementation = EmailResponse.class))),
-            @ApiResponse(responseCode = "400", description = "입력한 이메일은 이미 존재합니다.")
+                    content = @Content(schema = @Schema(implementation = EmailResponse.class)))
     })
     @GetMapping("/signup/email/{email}")
     public ResponseEntity<EmailResponse> checkEmail(@PathVariable String email) {
@@ -63,8 +57,7 @@ public class MemberController {
     @Operation(summary = "로그인 아이디 중복 검사 메서드", description = "입력한 로그인 아이디가 이미 존재하는지 확인합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "입력한 로그인 아이디는 사용가능 합니다.",
-                    content = @Content(schema = @Schema(implementation = LoginIdResponse.class))),
-            @ApiResponse(responseCode = "400", description = "입력한 로그인 아이디는 이미 존재합니다.")
+                    content = @Content(schema = @Schema(implementation = LoginIdResponse.class)))
     })
     @GetMapping("/signup/loginId/{loginId}")
     public ResponseEntity<LoginIdResponse> checkLoginId(@PathVariable String loginId) {
@@ -72,6 +65,15 @@ public class MemberController {
     }
 
     // 이메일 인증 메서드
+    @Operation(summary = "이메일 인증 메서드", description = "이메일 인증을 통해 서버에 등록된 학교의 학생임을 확인합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이메일 인증 코드 전송 성공.",
+                    content = @Content(schema = @Schema(implementation = CodeResponse.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "이메일 형식이 서버에 등록되지 않은 형식이다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            )
+    })
     @PostMapping("/signup/email/auth")
     public ResponseEntity<CodeResponse> sendEmail(@RequestParam String to) throws Exception {
         CodeResponse code = emailService.sendEmail(to);
