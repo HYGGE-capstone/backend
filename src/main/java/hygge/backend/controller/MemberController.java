@@ -7,7 +7,7 @@ import hygge.backend.dto.response.CodeResponse;
 import hygge.backend.dto.response.EmailResponse;
 import hygge.backend.dto.response.LoginIdResponse;
 import hygge.backend.dto.response.SignupResponse;
-import hygge.backend.exception.DuplicateException;
+import hygge.backend.error.exception.DuplicateException;
 import hygge.backend.service.EmailService;
 import hygge.backend.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;

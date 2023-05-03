@@ -9,7 +9,7 @@ import hygge.backend.dto.response.LoginIdResponse;
 import hygge.backend.dto.response.SignupResponse;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.RefreshToken;
-import hygge.backend.exception.DuplicateException;
+import hygge.backend.error.exception.DuplicateException;
 import hygge.backend.jwt.TokenProvider;
 import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.RefreshTokenRepository;
