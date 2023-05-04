@@ -86,6 +86,7 @@ public class MemberController {
         return memberService.findId(email);
     }
 
+    // 로그인 메서드
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(memberService.login(loginRequest));
