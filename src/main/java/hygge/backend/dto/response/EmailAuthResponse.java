@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CodeResponse {
+public class EmailAuthResponse {
+    private Long schoolId;
+    private String schoolName;
     private String code;
 }

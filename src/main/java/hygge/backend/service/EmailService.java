@@ -1,6 +1,7 @@
 package hygge.backend.service;
 
-import hygge.backend.dto.response.CodeResponse;
+import hygge.backend.dto.response.EmailAuthResponse;
+import hygge.backend.entity.School;
 import hygge.backend.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
@@ -9,8 +10,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.Message;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
@@ -46,11 +45,17 @@ public class EmailService {
         return key.toString();
     }
 
-    public CodeResponse sendEmail(String to) throws Exception {
+    @Transactional(readOnly = true)
+    public EmailAuthResponse sendEmail(String email) throws Exception {
+        int index = email.lastIndexOf("@") + 1;
+        String emailForm = email.substring(index);
 
-        if (!emailIsValidate(to)) {
-            throw new RuntimeException("등록되지 않은 이메일 형식입니다.");
+        if (index <= 1) { // 0일 경우 @ 없음, 1일 경우 이메일 입력 안함.
+            throw new RuntimeException("올바르지 않은 이메일 형식입니다.");
         }
+
+        School school = schoolRepository.findByEmailForm(emailForm)
+                .orElseThrow(()-> new RuntimeException("등록되지 않은 학교의 이메일 형식입니다."));
 
         final String code = createCode();
 
@@ -62,9 +67,9 @@ public class EmailService {
         msgg+="CODE : <strong>";
         msgg+=code+"</strong></div>";
 
-        helper.setTo(to);
+        helper.setTo(email);
         helper.setFrom("ajou.sw.hygge@gmail.com");
-        helper.setSubject("[아주좋은팀]회원가입 인증 이메일");
+        helper.setSubject("[아주좋은팀] 회원가입 인증 이메일");
         helper.setText(msgg, true);
 
         try {
@@ -73,16 +78,10 @@ public class EmailService {
             e.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return new CodeResponse(code);
+        return EmailAuthResponse.builder()
+                .schoolId(school.getId())
+                .schoolName(school.getSchoolName())
+                .code(code)
+                .build();
     }
-
-    @Transactional(readOnly = true)
-    public boolean emailIsValidate(String email) {
-        // 이메일을 @ 기준으로 나눠서 이메일 폼만 저장한다.
-        int index = email.lastIndexOf("@") + 1;
-        String emailForm = email.substring(index);
-        // 학교에서 해당하는 이메일 폼이 있는지 확인한다.
-        return schoolRepository.existsByEmailForm(emailForm);
-    }
-
 }

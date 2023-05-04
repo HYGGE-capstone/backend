@@ -68,16 +68,16 @@ public class MemberController {
     @Operation(summary = "이메일 인증 메서드", description = "이메일 인증을 통해 서버에 등록된 학교의 학생임을 확인합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이메일 인증 코드 전송 성공.",
-                    content = @Content(schema = @Schema(implementation = CodeResponse.class))
+                    content = @Content(schema = @Schema(implementation = EmailAuthResponse.class))
             ),
             @ApiResponse(responseCode = "400", description = "이메일 형식이 서버에 등록되지 않은 형식이다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })
     @PostMapping("/signup/email/auth")
-    public ResponseEntity<CodeResponse> sendEmail(@RequestParam String to) throws Exception {
-        CodeResponse code = emailService.sendEmail(to);
-        return ResponseEntity.ok(code);
+    public ResponseEntity<EmailAuthResponse> sendEmail(@RequestParam String to) throws Exception {
+        EmailAuthResponse emailAuthResponse = emailService.sendEmail(to);
+        return ResponseEntity.ok(emailAuthResponse);
     }
 
     // 아이디 찾기 메서드
