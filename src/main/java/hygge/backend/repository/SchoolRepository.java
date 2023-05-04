@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface SchoolRepository extends JpaRepository<School, Long> {
     Optional<School> findByEmailForm(String emailForm);
 
-    Optional<School> findBySchoolId(Long schoolId);
+    Optional<School> findById(Long Id);
 }

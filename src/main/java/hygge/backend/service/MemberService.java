@@ -48,7 +48,7 @@ public class MemberService {
             throw new RuntimeException("이미 사용중인 아이디 입니다.");
         }
 
-        School school = schoolRepository.findBySchoolId(signupRequest.getSchoolId())
+        School school = schoolRepository.findById(signupRequest.getSchoolId())
                 .orElseThrow(()->new RuntimeException("등록되지 않은 학교 입니다."));
 
         Member member = Member.builder()

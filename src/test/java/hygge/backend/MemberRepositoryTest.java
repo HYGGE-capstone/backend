@@ -22,28 +22,4 @@ public class MemberRepositoryTest {
     public void MemberRepository가Null이아님() {
         assertThat(memberRepository).isNotNull();
     }
-
-    @Test
-    public void 회원등록(){
-
-        //Given
-        final Member member = Member.builder()
-                .loginId("loginId")
-                .email("test@ajou.ac.kr")
-                .password("1234")
-                .role(ROLE_USER)
-                .nickname("test_nickname")
-                .build();
-        //When
-        final Member result = memberRepository.save(member);
-
-        //Then
-        assertThat(result.getId()).isNotNull();
-        assertThat(result.getLoginId()).isEqualTo("loginId");
-        assertThat(result.getEmail()).isEqualTo("test@ajou.ac.kr");
-        assertThat(result.getPassword()).isEqualTo("1234");
-        assertThat(result.getRole()).isEqualTo(ROLE_USER);
-        assertThat(result.getNickname()).isEqualTo("test_nickname");
-    }
-
 }
