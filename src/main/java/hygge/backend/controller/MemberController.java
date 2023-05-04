@@ -38,13 +38,9 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest) {
 
-        SignupResponse response;
-        try {
-            response = memberService.signup(signupRequest);
-        } catch (DuplicateException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity(response, HttpStatus.OK);
+        SignupResponse response = memberService.signup(signupRequest);
+
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "이메일 중복 검사 메서드", description = "입력한 이메일이 이미 존재하는지 확인합니다.")

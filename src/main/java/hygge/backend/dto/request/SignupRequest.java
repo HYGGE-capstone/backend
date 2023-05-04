@@ -26,12 +26,16 @@ public class SignupRequest {
     @Schema(description = "닉네임", defaultValue = "tester")
     private String nickname;
 
+    @Schema(description = "학교 아이디", defaultValue = "0")
+    private Long schoolId;
+
     @Builder
-    public SignupRequest(String loginId, String email, String password, String nickname) {
+    public SignupRequest(String loginId, String email, String password, String nickname, Long schoolId) {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.schoolId = schoolId;
     }
 
     public Member toMember(PasswordEncoder passwordEncoder) {

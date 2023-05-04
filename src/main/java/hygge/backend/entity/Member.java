@@ -33,6 +33,7 @@ public class Member {
     @Column(nullable = false)
     private Role role;  // 역할 [USER, ADMIN]
 
+    @Column(nullable = false)
     private String nickname;
 
     @OneToMany(mappedBy = "member")
@@ -43,12 +44,13 @@ public class Member {
 
     // 빌더
     @Builder
-    public Member(String loginId, String email, String password, String nickname, Role role) {
+    public Member(String loginId, String email, String password, String nickname, Role role, School school) {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.role = role;
+        this.school = school;
     }
 
     // 비즈니스 메서드

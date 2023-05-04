@@ -9,10 +9,13 @@ import hygge.backend.dto.response.LoginIdResponse;
 import hygge.backend.dto.response.SignupResponse;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.RefreshToken;
+import hygge.backend.entity.Role;
+import hygge.backend.entity.School;
 import hygge.backend.error.exception.DuplicateException;
 import hygge.backend.jwt.TokenProvider;
 import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.RefreshTokenRepository;
+import hygge.backend.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,16 +37,29 @@ public class MemberService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    private final SchoolRepository schoolRepository;
+
     @Transactional
     public SignupResponse signup(SignupRequest signupRequest) throws RuntimeException {
         if (memberRepository.existsByEmail(signupRequest.getEmail())) {  // 이메일 중복
-            throw new DuplicateException();
+            throw new RuntimeException("이미 가입된 이메일 입니다.");
         }
         else if (memberRepository.existsByLoginId(signupRequest.getLoginId())) {  // 로그인 아이디 중복
-            throw new DuplicateException();
+            throw new RuntimeException("이미 사용중인 아이디 입니다.");
         }
 
-        Member member = signupRequest.toMember(passwordEncoder);
+        School school = schoolRepository.findBySchoolId(signupRequest.getSchoolId())
+                .orElseThrow(()->new RuntimeException("등록되지 않은 학교 입니다."));
+
+        Member member = Member.builder()
+                        .loginId(signupRequest.getLoginId())
+                        .email(signupRequest.getEmail())
+                        .password(passwordEncoder.encode(signupRequest.getPassword()))
+                        .nickname(signupRequest.getNickname())
+                        .role(Role.ROLE_USER)
+                        .school(school)
+                        .build();
+
         memberRepository.save(member);
 
         SignupResponse response = new SignupResponse();
