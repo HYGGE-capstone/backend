@@ -1,8 +1,14 @@
 package hygge.backend.dto.response;
 
-import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmailResponse {
+    @Schema(description = "이메일", defaultValue = "testEmail@ajou.ac.kr")
     private String email;
 }

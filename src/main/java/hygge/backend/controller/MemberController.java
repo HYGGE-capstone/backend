@@ -30,7 +30,10 @@ public class MemberController {
     @Operation(summary = "회원가입 메서드", description = "회원가입 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입 성공",
-                    content = @Content(schema = @Schema(implementation = SignupResponse.class)))
+                    content = @Content(schema = @Schema(implementation = SignupResponse.class))),
+            @ApiResponse(responseCode = "400", description = "회원가입 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
     })
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest) {
@@ -80,16 +83,24 @@ public class MemberController {
         return ResponseEntity.ok(emailAuthResponse);
     }
 
-    // 아이디 찾기 메서드
-    @GetMapping("/findid/{email}")
-    public ResponseEntity<?> findId(@PathVariable String email) {
-        return memberService.findId(email);
-    }
-
     // 로그인 메서드
+    @Operation(summary = "로그인 메서드", description = "로그인 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 성공",
+                    content = @Content(schema = @Schema(implementation = TokenDto.class))),
+            @ApiResponse(responseCode = "400", description = "로그인 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(memberService.login(loginRequest));
     }
+
+    // 아이디 찾기 메서드
+//    @GetMapping("/findid/{email}")
+//    public ResponseEntity<?> findId(@PathVariable String email) {
+//        return memberService.findId(email);
+//    }
 }
 
