@@ -42,6 +42,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Subscribe> subscribes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<MemberTeam> memberTeams = new ArrayList<>();
+
     // 빌더
     @Builder
     public Member(String loginId, String email, String password, String nickname, Role role, School school) {

@@ -30,4 +30,7 @@ public class MemberTeam {
         this.member = member;
         this.team = team;
     }
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }
