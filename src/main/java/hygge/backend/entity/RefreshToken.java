@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,6 +13,8 @@ import javax.persistence.Table;
 @Entity
 public class RefreshToken {
     @Id
+    @GeneratedValue
+    private Long id;
     @Column(name = "rt_key")
     private String key;
 
