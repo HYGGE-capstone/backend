@@ -1,23 +1,23 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.SubscribeDto;
-import hygge.backend.dto.response.ErrorResponse;
+import hygge.backend.dto.response.subscribe.SubscribeResponse;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Subject;
 import hygge.backend.entity.Subscribe;
 import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.SubjectRepository;
 import hygge.backend.repository.SubscribeRepository;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SubscribeService {
@@ -61,6 +61,21 @@ public class SubscribeService {
         subscribeRepository.delete(subscribe);
 
         return subscribeDto;
+    }
+
+    // 구독한 과목 조회 메서드
+    @Transactional(readOnly = true)
+    public SubscribeResponse getSubscribes(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다"));
+
+        List<Subject> subjects = new ArrayList<>();
+
+        for (Subscribe subscribe : member.getSubscribes()) {
+            subjects.add(subscribe.getSubject());
+        }
+
+        return SubscribeResponse.builder().subscribes(subjects).build();
     }
 
 }
