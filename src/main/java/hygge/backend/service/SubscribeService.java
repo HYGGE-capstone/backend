@@ -1,5 +1,6 @@
 package hygge.backend.service;
 
+import hygge.backend.dto.SubjectDto;
 import hygge.backend.dto.SubscribeDto;
 import hygge.backend.dto.response.subscribe.SubscribeResponse;
 import hygge.backend.entity.Member;
@@ -70,10 +71,20 @@ public class SubscribeService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException("해당하는 회원이 존재하지 않습니다"));
 
-        List<Subject> subjects = new ArrayList<>();
+        List<SubjectDto> subjects = new ArrayList<>();
 
         for (Subscribe subscribe : member.getSubscribes()) {
-            subjects.add(subscribe.getSubject());
+            Subject subject = subscribe.getSubject();
+
+            subjects.add(SubjectDto.builder()
+                            .subjectId(subject.getId())
+                            .name(subject.getName())
+                            .code(subject.getCode())
+                            .year(subject.getYear())
+                            .semester(subject.getSemester())
+                            .pName(subject.getPName())
+                            .time(subject.getTime())
+                            .build());
         }
 
         return SubscribeResponse.builder().subscribes(subjects).build();

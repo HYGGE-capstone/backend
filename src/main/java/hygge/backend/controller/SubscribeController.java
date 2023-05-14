@@ -63,8 +63,6 @@ public class SubscribeController {
     public ResponseEntity<SubscribeResponse> getSubscribes(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
         SubscribeResponse response = subscribeService.getSubscribes(memberId);
-        log.info("--------------------------");
-        log.info(response.toString());
         return ResponseEntity.ok(response);
     }
 

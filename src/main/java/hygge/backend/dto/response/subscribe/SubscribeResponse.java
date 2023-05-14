@@ -1,6 +1,7 @@
 package hygge.backend.dto.response.subscribe;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hygge.backend.dto.SubjectDto;
 import hygge.backend.entity.Subject;
 import hygge.backend.entity.Subscribe;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubscribeResponse {
-
-    private List<Subject> subscribes;
+    private List<SubjectDto> subscribes;
 }
