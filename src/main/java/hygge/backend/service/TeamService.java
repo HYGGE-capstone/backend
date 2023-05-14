@@ -1,7 +1,9 @@
 package hygge.backend.service;
 
+import hygge.backend.dto.TeamDto;
 import hygge.backend.dto.request.team.CreateTeamRequest;
 import hygge.backend.dto.response.team.CreateTeamResponse;
+import hygge.backend.dto.response.team.TeamResponse;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.MemberTeam;
 import hygge.backend.entity.Subject;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -34,7 +37,7 @@ public class TeamService {
         log.info("TeamService.createTeam {}", memberId);
 
         Member leader = memberRepository.findById(memberId)
-                .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
 
         log.info("memberRepository.findById = {}", leader.getId());
 
@@ -42,12 +45,12 @@ public class TeamService {
                 .orElseThrow(() -> new BusinessException("요청하신 과목이 존재하지 않습니다. "));
         log.info("subjectRepository.findById = {}", subject.getId());
 
-        if(request.getMaxMember() < 2) throw new BusinessException("최대 멤버수가 2보다 작습니다.");
+        if (request.getMaxMember() < 2) throw new BusinessException("최대 멤버수가 2보다 작습니다.");
 
         // 유저가 과목에 속한 팀이 이미 있다면 오류 처리
         Long subjectId;
 
-        for(MemberTeam memberTeam : leader.getMemberTeams()){
+        for (MemberTeam memberTeam : leader.getMemberTeams()) {
             subjectId = memberTeam.getTeam().getSubject().getId();
             if (subjectId == request.getSubjectId()) {
                 throw new BusinessException("이미 선택된 과목에 팀이 있습니다. ");
@@ -85,5 +88,31 @@ public class TeamService {
                 .build();
 
         return response;
+    }
+
+    @Transactional(readOnly = true)
+    public TeamResponse getTeams(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException("해당하는 회원이 존재하지 않습니다"));
+
+        List<TeamDto> teams = new ArrayList<>();
+
+        for (MemberTeam memberTeam : member.getMemberTeams()) {
+            Team team = memberTeam.getTeam();
+            Subject subject = team.getSubject();
+
+            teams.add(TeamDto.builder()
+                            .teamId(team.getId())
+                            .teamName(team.getName())
+                            .teamTitle(team.getTitle())
+                            .teamDescription(team.getDescription())
+                            .maxMember(team.getMaxMember())
+                            .subjectId(subject.getId())
+                            .subjectName(subject.getName())
+                            .subjectCode(subject.getCode())
+                    .build());
+        }
+
+        return TeamResponse.builder().teams(teams).build();
     }
 }

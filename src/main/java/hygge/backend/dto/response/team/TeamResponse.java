@@ -1,6 +1,6 @@
-package hygge.backend.dto.response.subscribe;
+package hygge.backend.dto.response.team;
 
-import hygge.backend.dto.SubjectDto;
+import hygge.backend.dto.TeamDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +12,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubscribeResponse {
-    private List<SubjectDto> subscribes;
+public class TeamResponse {
+    private List<TeamDto> teams;
 }
