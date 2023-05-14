@@ -5,6 +5,7 @@ import hygge.backend.dto.response.subscribe.SubscribeResponse;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Subject;
 import hygge.backend.entity.Subscribe;
+import hygge.backend.error.exception.BusinessException;
 import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.SubjectRepository;
 import hygge.backend.repository.SubscribeRepository;
@@ -29,12 +30,12 @@ public class SubscribeService {
     @Transactional
     public SubscribeDto subscribe(SubscribeDto subscribeDto) {
         Member member = memberRepository.findById(subscribeDto.getMemberId())
-                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException("해당하는 회원이 존재하지 않습니다."));
         Subject subject = subjectRepository.findById(subscribeDto.getSubjectId())
-                .orElseThrow(() -> new RuntimeException("해당하는 과목이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException("해당하는 과목이 존재하지 않습니다."));
 
         if(subscribeRepository.existsByMemberIdAndSubjectId(member.getId(), subject.getId())){
-            throw new RuntimeException("이미 구독한 과목입니다.");
+            throw new BusinessException("이미 구독한 과목입니다.");
         }
 
         Subscribe subscribe = Subscribe.builder()
@@ -51,12 +52,12 @@ public class SubscribeService {
     @Transactional
     public SubscribeDto unsubscribe(SubscribeDto subscribeDto) {
         Member member = memberRepository.findById(subscribeDto.getMemberId())
-                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException("해당하는 회원이 존재하지 않습니다."));
         Subject subject = subjectRepository.findById(subscribeDto.getSubjectId())
-                .orElseThrow(() -> new RuntimeException("해당하는 과목이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException("해당하는 과목이 존재하지 않습니다."));
 
         Subscribe subscribe = subscribeRepository.findByMemberIdAndSubjectId(member.getId(), subject.getId())
-                .orElseThrow(() -> new RuntimeException("구독되지 않은 과목입니다."));
+                .orElseThrow(() -> new BusinessException("구독되지 않은 과목입니다."));
 
         subscribeRepository.delete(subscribe);
 
@@ -67,7 +68,7 @@ public class SubscribeService {
     @Transactional(readOnly = true)
     public SubscribeResponse getSubscribes(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다"));
+                .orElseThrow(() -> new BusinessException("해당하는 회원이 존재하지 않습니다"));
 
         List<Subject> subjects = new ArrayList<>();
 

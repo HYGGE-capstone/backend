@@ -2,6 +2,7 @@ package hygge.backend.service;
 
 import hygge.backend.dto.response.EmailAuthResponse;
 import hygge.backend.entity.School;
+import hygge.backend.error.exception.BusinessException;
 import hygge.backend.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
@@ -51,11 +52,11 @@ public class EmailService {
         String emailForm = email.substring(index);
 
         if (index <= 1) { // 0일 경우 @ 없음, 1일 경우 이메일 입력 안함.
-            throw new RuntimeException("올바르지 않은 이메일 형식입니다.");
+            throw new BusinessException("올바르지 않은 이메일 형식입니다.");
         }
 
         School school = schoolRepository.findByEmailForm(emailForm)
-                .orElseThrow(()-> new RuntimeException("등록되지 않은 학교의 이메일 형식입니다."));
+                .orElseThrow(()-> new BusinessException("등록되지 않은 학교의 이메일 형식입니다."));
 
         final String code = createCode();
 

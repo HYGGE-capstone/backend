@@ -11,6 +11,7 @@ import hygge.backend.entity.Member;
 import hygge.backend.entity.RefreshToken;
 import hygge.backend.entity.Role;
 import hygge.backend.entity.School;
+import hygge.backend.error.exception.BusinessException;
 import hygge.backend.error.exception.DuplicateException;
 import hygge.backend.jwt.TokenProvider;
 import hygge.backend.repository.MemberRepository;
@@ -40,16 +41,16 @@ public class MemberService {
     private final SchoolRepository schoolRepository;
 
     @Transactional
-    public SignupResponse signup(SignupRequest signupRequest) throws RuntimeException {
+    public SignupResponse signup(SignupRequest signupRequest) throws BusinessException {
         if (memberRepository.existsByEmail(signupRequest.getEmail())) {  // 이메일 중복
-            throw new RuntimeException("이미 가입된 이메일 입니다.");
+            throw new BusinessException("이미 가입된 이메일 입니다.");
         }
         else if (memberRepository.existsByLoginId(signupRequest.getLoginId())) {  // 로그인 아이디 중복
-            throw new RuntimeException("이미 사용중인 아이디 입니다.");
+            throw new BusinessException("이미 사용중인 아이디 입니다.");
         }
 
         School school = schoolRepository.findById(signupRequest.getSchoolId())
-                .orElseThrow(()->new RuntimeException("등록되지 않은 학교 입니다."));
+                .orElseThrow(()->new BusinessException("등록되지 않은 학교 입니다."));
 
         Member member = Member.builder()
                         .loginId(signupRequest.getLoginId())
@@ -131,7 +132,7 @@ public class MemberService {
     public TokenDto reissue(TokenRequest tokenRequest) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(tokenRequest.getRefreshToken())) {
-            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+            throw new BusinessException("Refresh Token 이 유효하지 않습니다.");
         }
 
         // 2. Access Token 에서 Member ID 가져오기
@@ -139,11 +140,11 @@ public class MemberService {
 
         // 3. 저장소에서 Member ID를 기반으로 Refresh Token 값 가져옴
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+                .orElseThrow(() -> new BusinessException("로그아웃 된 사용자입니다."));
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.getValue().equals(tokenRequest.getRefreshToken())) {
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+            throw new BusinessException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
         // 5. 새로운 토큰 생성
