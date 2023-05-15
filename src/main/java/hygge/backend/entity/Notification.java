@@ -33,7 +33,7 @@ public class Notification {
     private boolean isOpened;
 
     //
-    public void isOpen() {
+    public void open() {
         this.isOpened = true;
     }
 }
