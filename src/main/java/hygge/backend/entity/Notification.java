@@ -31,4 +31,9 @@ public class Notification {
     private LocalDateTime createdTime;
 
     private boolean isOpened;
+
+    //
+    public void isOpen() {
+        this.isOpened = true;
+    }
 }
