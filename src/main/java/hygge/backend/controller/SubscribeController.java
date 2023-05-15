@@ -28,7 +28,6 @@ public class SubscribeController {
 
     private final SubscribeService subscribeService;
 
-    // 구독 메서드
     @Operation(summary = "구독 메서드", description = "사용자가 원하는 과목을 구독합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "구독 성공.",
@@ -43,7 +42,6 @@ public class SubscribeController {
         return ResponseEntity.ok(subscribeService.subscribe(new SubscribeDto(memberId, subjectId)));
     }
 
-    // 구독 해제 메서드
     @Operation(summary = "구독 해제 메서드", description = "사용자가 원하는 과목의 구독을 해제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "구독 해제 성공.",
@@ -58,7 +56,13 @@ public class SubscribeController {
         return ResponseEntity.ok(subscribeService.unsubscribe(new SubscribeDto(memberId, subjectId)));
     }
 
-    // 구독한 과목 조회 메서드
+    @Operation(summary = "구독한 과목 조회 메서드", description = "구독한 과목을 조회하는 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "구독한 과목 조회 성공.",
+                    content = @Content(schema = @Schema(implementation = SubscribeResponse.class))),
+            @ApiResponse(responseCode = "400", description = "구독한 과목 조회 실패.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping
     public ResponseEntity<SubscribeResponse> getSubscribes(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
