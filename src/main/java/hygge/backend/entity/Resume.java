@@ -1,6 +1,7 @@
 package hygge.backend.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,4 +31,12 @@ public class Resume {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
+
+    @Builder
+    public Resume(Member member, String content, String title, Subject subject) {
+        this.member = member;
+        this.content = content;
+        this.title = title;
+        this.subject = subject;
+    }
 }
