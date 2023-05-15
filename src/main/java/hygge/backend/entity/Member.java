@@ -36,6 +36,8 @@ public class Member {
     @Column(nullable = false)
     private String nickname;
 
+    //
+
     @OneToMany(mappedBy = "member")
     private List<Resume> resumes = new ArrayList<>();
 
@@ -44,6 +46,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<MemberTeam> memberTeams = new ArrayList<>();
+
+    @OneToMany(mappedBy = "to")
+    private List<Notification> notifications = new ArrayList<>();
 
     // 빌더
     @Builder
