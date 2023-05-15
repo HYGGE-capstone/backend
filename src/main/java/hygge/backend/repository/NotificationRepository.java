@@ -1,10 +1,9 @@
 package hygge.backend.repository;
 
-import hygge.backend.entity.Team;
+import hygge.backend.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TeamRepository extends JpaRepository<Team, Long> {
-
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
 }

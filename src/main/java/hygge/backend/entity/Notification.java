@@ -1,6 +1,7 @@
 package hygge.backend.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -36,5 +37,14 @@ public class Notification {
     //
     public void open() {
         this.isOpened = true;
+    }
+
+    //
+    @Builder
+    public Notification(String from, String content, Member to, boolean isOpened) {
+        this.from = from;
+        this.content = content;
+        this.to = to;
+        this.isOpened = isOpened;
     }
 }
