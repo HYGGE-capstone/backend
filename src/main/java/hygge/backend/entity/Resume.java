@@ -21,9 +21,13 @@ public class Resume {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @Column(name = "RESUME_CONTENT")
     private String content;
 
-    @OneToOne
+    @Column(name = "RESUME_TITLE")
+    private String title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
 }
