@@ -112,7 +112,30 @@ public class TeamService {
                             .subjectCode(subject.getCode())
                     .build());
         }
+        return TeamResponse.builder().teams(teams).build();
+    }
 
+    @Transactional(readOnly = true)
+    public TeamResponse searchTeams(Long subjectId) {
+
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new BusinessException("해당하는 과목을 찾을 수 없습니다"));
+
+        List<TeamDto> teams = new ArrayList<>();
+
+        for (Team team : subject.getTeams()) {
+
+            teams.add(TeamDto.builder()
+                    .teamId(team.getId())
+                    .teamName(team.getName())
+                    .teamTitle(team.getTitle())
+                    .teamDescription(team.getDescription())
+                    .maxMember(team.getMaxMember())
+                    .subjectId(subject.getId())
+                    .subjectName(subject.getName())
+                    .subjectCode(subject.getCode())
+                    .build());
+        }
         return TeamResponse.builder().teams(teams).build();
     }
 }

@@ -42,15 +42,28 @@ public class TeamController {
 
     @Operation(summary = "소속된 팀 조회 메서드", description = "소속된 팀을 조회하는 메서드입니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "팀 조회 성공.",
+            @ApiResponse(responseCode = "200", description = "소속된 팀 조회 성공.",
                     content = @Content(schema = @Schema(implementation = TeamResponse.class))),
-            @ApiResponse(responseCode = "400", description = "팀 조회 실패.",
+            @ApiResponse(responseCode = "400", description = "소속된 팀 조회 실패.",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping
     public ResponseEntity<TeamResponse> getTeams(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
         TeamResponse response = teamService.getTeams(memberId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "괴목별 팀 조회 메서드", description = "괴목별 팀을 조회하는 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "과목별 팀 조회 성공.",
+                    content = @Content(schema = @Schema(implementation = TeamResponse.class))),
+            @ApiResponse(responseCode = "400", description = "과목별 팀 조회 실패.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/search")
+    public ResponseEntity<TeamResponse> searchTeams(@RequestParam Long subjectId) {
+        TeamResponse response = teamService.searchTeams(subjectId);
         return ResponseEntity.ok(response);
     }
 

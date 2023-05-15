@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -29,5 +31,8 @@ public class Subject {
     private String pName;  // 교수명
 
     private String time;  // 수업시간 ex) 월A 수B
+
+    @OneToMany(mappedBy = "subject")
+    private List<Team> teams = new ArrayList<>();
 
 }
