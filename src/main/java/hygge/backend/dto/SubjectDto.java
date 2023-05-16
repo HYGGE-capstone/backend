@@ -1,6 +1,7 @@
 package hygge.backend.dto;
 
 import hygge.backend.entity.Semester;
+import hygge.backend.entity.Subject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,4 +34,14 @@ public class SubjectDto {
 
     @Schema(description = "과목 시간", defaultValue = "월F(팔309) 월G(팔317) 월H(팔317) 목F(팔309) 목G(팔336) 목H(팔336)")
     private String time;
+
+    public SubjectDto(Subject subject) {
+        this.subjectId = subject.getId();
+        this.name = subject.getName();
+        this.code = subject.getCode();
+        this.year = subject.getYear();
+        this.semester = subject.getSemester();
+        this.pName = subject.getPName();
+        this.time = subject.getTime();
+    }
 }

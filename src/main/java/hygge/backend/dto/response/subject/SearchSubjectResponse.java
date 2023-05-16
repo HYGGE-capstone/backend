@@ -1,5 +1,6 @@
 package hygge.backend.dto.response.subject;
 
+import hygge.backend.dto.SubjectDto;
 import hygge.backend.entity.Subject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -16,5 +17,5 @@ import java.util.List;
 public class SearchSubjectResponse {
 
     @Schema(description = "조회한 과목 정보")
-    private List<Subject> subjects;
+    private List<SubjectDto> subjects;
 }
