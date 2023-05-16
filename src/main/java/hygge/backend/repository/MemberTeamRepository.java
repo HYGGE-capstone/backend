@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface MemberTeamRepository extends JpaRepository<MemberTeam, Long> {
     List<MemberTeam> findByMemberId(Long memberId);
+
+    List<MemberTeam> findByTeamId(Long teamId);
 }

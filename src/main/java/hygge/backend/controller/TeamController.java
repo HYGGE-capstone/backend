@@ -4,6 +4,7 @@ import hygge.backend.dto.SubscribeDto;
 import hygge.backend.dto.request.team.CreateTeamRequest;
 import hygge.backend.dto.response.ErrorResponse;
 import hygge.backend.dto.response.team.CreateTeamResponse;
+import hygge.backend.dto.response.team.GetMembersByTeamResponse;
 import hygge.backend.dto.response.team.TeamResponse;
 import hygge.backend.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,6 +65,19 @@ public class TeamController {
     @GetMapping("/search")
     public ResponseEntity<TeamResponse> searchTeams(@RequestParam Long subjectId) {
         TeamResponse response = teamService.searchTeams(subjectId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "팀에 속한 멤버 조회 메서드", description = "팀에 속한 멤버들을 조회하는 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공.",
+                    content = @Content(schema = @Schema(implementation = GetMembersByTeamResponse.class))),
+            @ApiResponse(responseCode = "400", description = "조회 실패.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/members")
+    public ResponseEntity<GetMembersByTeamResponse> getMembersByTeam(@RequestParam Long teamId) {
+        GetMembersByTeamResponse response = teamService.getMembersByTeam(teamId);
         return ResponseEntity.ok(response);
     }
 

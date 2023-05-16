@@ -42,7 +42,7 @@ public class TeamDto {
     private String subjectCode;
 
 
-    @Schema(description = "리더 여부", defaultValue = false)
+    @Schema(description = "리더 여부", defaultValue = "false")
     private boolean isLeader;
 
     public TeamDto(Team team) {

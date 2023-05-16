@@ -4,6 +4,8 @@ import hygge.backend.dto.TeamDto;
 import hygge.backend.dto.notification.NewTeamNotiDto;
 import hygge.backend.dto.request.team.CreateTeamRequest;
 import hygge.backend.dto.response.team.CreateTeamResponse;
+import hygge.backend.dto.response.team.GetMembersByTeamResponse;
+import hygge.backend.dto.response.team.MembersByTeamDto;
 import hygge.backend.dto.response.team.TeamResponse;
 import hygge.backend.entity.*;
 import hygge.backend.error.exception.BusinessException;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -110,6 +113,8 @@ public class TeamService {
         for (MemberTeam memberTeam : member.getMemberTeams()) {
             Team team = memberTeam.getTeam();
             Subject subject = team.getSubject();
+            boolean isLeader = false;
+            if(team.getLeader().getId() == memberId) isLeader = true;
 
             teams.add(TeamDto.builder()
                             .teamId(team.getId())
@@ -118,6 +123,7 @@ public class TeamService {
                             .teamDescription(team.getDescription())
                             .maxMember(team.getMaxMember())
                             .numMember(team.getNumMember())
+                            .isLeader(isLeader)
                             .subjectId(subject.getId())
                             .subjectName(subject.getName())
                             .subjectCode(subject.getCode())
@@ -149,5 +155,18 @@ public class TeamService {
                     .build());
         }
         return TeamResponse.builder().teams(teams).build();
+    }
+
+    @Transactional(readOnly = true)
+    public GetMembersByTeamResponse getMembersByTeam(Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new BusinessException("요청하신 팀이 존재하지 않습니다."));
+
+        Long leaderId = team.getLeader().getId();
+
+        List<MembersByTeamDto> members = memberTeamRepository.findByTeamId(teamId)
+                .stream().map(memberTeam -> new MembersByTeamDto(memberTeam.getMember(), leaderId)).collect(Collectors.toList());
+
+        return GetMembersByTeamResponse.builder().members(members).build();
     }
 }
