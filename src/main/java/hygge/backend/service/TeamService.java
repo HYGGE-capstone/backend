@@ -4,10 +4,7 @@ import hygge.backend.dto.TeamDto;
 import hygge.backend.dto.request.team.CreateTeamRequest;
 import hygge.backend.dto.response.team.CreateTeamResponse;
 import hygge.backend.dto.response.team.TeamResponse;
-import hygge.backend.entity.Member;
-import hygge.backend.entity.MemberTeam;
-import hygge.backend.entity.Subject;
-import hygge.backend.entity.Team;
+import hygge.backend.entity.*;
 import hygge.backend.error.exception.BusinessException;
 import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.MemberTeamRepository;
@@ -31,6 +28,8 @@ public class TeamService {
     private final TeamRepository teamRepository;
 
     private final MemberTeamRepository memberTeamRepository;
+
+    private final NotificaitonService notificaitonService;
 
     @Transactional
     public CreateTeamResponse createTeam(Long memberId, CreateTeamRequest request) {
@@ -76,6 +75,13 @@ public class TeamService {
                 .build();
 
         memberTeamRepository.save(memberTeam);
+
+        // 구독자들에게 팀 생성 알림 전송
+        List<String> notiInfo = new ArrayList<>();
+        notiInfo.add(saveTeam.getName());
+        notiInfo.add(subject.getName());
+        notiInfo.add(subject.getCode());
+        notificaitonService.sendNotification(NotificationCase.NEW_TEAM, subject.getId(), notiInfo);
 
         CreateTeamResponse response = CreateTeamResponse.builder()
                 .teamId(saveTeam.getId())
