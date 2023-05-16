@@ -1,5 +1,6 @@
 package hygge.backend.dto;
 
+import hygge.backend.entity.Team;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,9 @@ public class TeamDto {
     @Schema(description = "최대 멤버 수 ", defaultValue = "5")
     private int maxMember;
 
+    @Schema(description = "현재 멤버 수 ", defaultValue = "1")
+    private int numMember;
+
 
     @Schema(description = "과목 아이디", defaultValue = "100")
     private Long subjectId;
@@ -36,4 +40,13 @@ public class TeamDto {
 
     @Schema(description = "과목 코드", defaultValue = "F100")
     private String subjectCode;
+
+    public TeamDto(Team team) {
+        this.teamId = team.getId();
+        this.teamName = team.getName();
+        this.teamTitle = team.getTitle();
+        this.teamDescription = team.getDescription();
+        this.maxMember = team.getMaxMember();
+        this.numMember = team.getNumMember();
+    }
 }

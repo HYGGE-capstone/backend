@@ -31,6 +31,9 @@ public class Team {
     @Column(name = "MAX_MEMBER")
     private int maxMember;
 
+    @Column(name = "NUM_MEMBER")
+    private int numMember;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LEADER_ID")
     private Member leader;
@@ -41,13 +44,14 @@ public class Team {
 
 
     @Builder
-    public Team(String name, String title, String description, int maxMember, Member leader, Subject subject) {
+    public Team(String name, String title, String description, int maxMember, int numMember, Member leader, Subject subject) {
         this.name = name;
         this.title = title;
         this.description = description;
         this.subject = subject;
         this.leader = leader;
         this.maxMember = maxMember;
+        this.numMember = numMember;
     }
 
 }

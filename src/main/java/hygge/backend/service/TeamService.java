@@ -66,6 +66,7 @@ public class TeamService {
                 .subject(subject)
                 .leader(leader)
                 .maxMember(request.getMaxMember())
+                .numMember(1)
                 .build();
 
         Team saveTeam = teamRepository.save(team);
@@ -116,6 +117,7 @@ public class TeamService {
                             .teamTitle(team.getTitle())
                             .teamDescription(team.getDescription())
                             .maxMember(team.getMaxMember())
+                            .numMember(team.getNumMember())
                             .subjectId(subject.getId())
                             .subjectName(subject.getName())
                             .subjectCode(subject.getCode())
@@ -140,6 +142,7 @@ public class TeamService {
                     .teamTitle(team.getTitle())
                     .teamDescription(team.getDescription())
                     .maxMember(team.getMaxMember())
+                    .numMember(team.getNumMember())
                     .subjectId(subject.getId())
                     .subjectName(subject.getName())
                     .subjectCode(subject.getCode())
