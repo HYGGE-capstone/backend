@@ -57,7 +57,7 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "이메일 인증 코드 전송 성공.",
                     content = @Content(schema = @Schema(implementation = EmailAuthResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "이메일 형식이 서버에 등록되지 않은 형식이다.",
+            @ApiResponse(responseCode = "400", description = "이메일 인증 코드 전송 실패",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })

@@ -2,6 +2,7 @@ package hygge.backend.controller;
 
 import hygge.backend.dto.SubjectDto;
 import hygge.backend.dto.SubscribeDto;
+import hygge.backend.dto.request.subscribe.SubscribeRequest;
 import hygge.backend.dto.response.ErrorResponse;
 import hygge.backend.dto.response.subscribe.SubscribeResponse;
 import hygge.backend.entity.Subscribe;
@@ -36,9 +37,9 @@ public class SubscribeController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
-    public ResponseEntity<SubscribeDto> subscribe(Principal principal, @RequestBody SubjectDto subjectDto) {
+    public ResponseEntity<SubscribeDto> subscribe(Principal principal, @RequestBody SubscribeRequest subscribeRequest) {
         Long memberId = Long.parseLong(principal.getName());
-        Long subjectId = subjectDto.getSubjectId();
+        Long subjectId = subscribeRequest.getSubjectId();
         return ResponseEntity.ok(subscribeService.subscribe(new SubscribeDto(memberId, subjectId)));
     }
 
@@ -50,9 +51,9 @@ public class SubscribeController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/cancel")
-    public ResponseEntity<SubscribeDto> unsubscribe(Principal principal, @RequestBody SubjectDto subjectDto) {
+    public ResponseEntity<SubscribeDto> unsubscribe(Principal principal, @RequestBody SubscribeRequest subscribeRequest) {
         Long memberId = Long.parseLong(principal.getName());
-        Long subjectId = subjectDto.getSubjectId();
+        Long subjectId = subscribeRequest.getSubjectId();
         return ResponseEntity.ok(subscribeService.unsubscribe(new SubscribeDto(memberId, subjectId)));
     }
 
