@@ -41,16 +41,6 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "이메일 중복 검사 메서드", description = "입력한 이메일이 이미 존재하는지 확인합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "입력한 이메일은 사용가능 합니다.",
-                    content = @Content(schema = @Schema(implementation = EmailResponse.class)))
-    })
-    @GetMapping("/signup/email/{email}")
-    public ResponseEntity<EmailResponse> checkEmail(@PathVariable String email) {
-        return memberService.checkEmail(email);
-    }
-
     @Operation(summary = "로그인 아이디 중복 검사 메서드", description = "입력한 로그인 아이디가 이미 존재하는지 확인합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "입력한 로그인 아이디는 사용가능 합니다.",

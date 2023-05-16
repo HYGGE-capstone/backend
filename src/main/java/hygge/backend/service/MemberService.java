@@ -72,17 +72,6 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<EmailResponse> checkEmail(String email) {
-        EmailResponse response = new EmailResponse();
-        response.setEmail(email);
-        if(memberRepository.existsByEmail(email)){
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
-        }else {
-            return new ResponseEntity(response, HttpStatus.OK);
-        }
-    }
-
-    @Transactional(readOnly = true)
     public ResponseEntity<LoginIdResponse> checkLoginId(String loginId) {
         LoginIdResponse response = new LoginIdResponse();
         response.setLoginId(loginId);

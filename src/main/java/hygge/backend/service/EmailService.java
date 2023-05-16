@@ -3,6 +3,7 @@ package hygge.backend.service;
 import hygge.backend.dto.response.EmailAuthResponse;
 import hygge.backend.entity.School;
 import hygge.backend.error.exception.BusinessException;
+import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
@@ -19,6 +20,7 @@ import java.util.Random;
 public class EmailService {
     private final JavaMailSender emailSender;
     private final SchoolRepository schoolRepository;
+    private final MemberRepository memberRepository;
 
     public static String createCode() {
         StringBuffer key = new StringBuffer();
@@ -57,6 +59,8 @@ public class EmailService {
 
         School school = schoolRepository.findByEmailForm(emailForm)
                 .orElseThrow(()-> new BusinessException("등록되지 않은 학교의 이메일 형식입니다."));
+
+        if(memberRepository.existsByEmail(email)) throw new BusinessException("이미 등록된 이메일 입니다.");
 
         final String code = createCode();
 
