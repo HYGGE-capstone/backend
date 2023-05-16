@@ -41,6 +41,10 @@ public class TeamDto {
     @Schema(description = "과목 코드", defaultValue = "F100")
     private String subjectCode;
 
+
+    @Schema(description = "리더 여부", defaultValue = false)
+    private boolean isLeader;
+
     public TeamDto(Team team) {
         this.teamId = team.getId();
         this.teamName = team.getName();
@@ -48,5 +52,6 @@ public class TeamDto {
         this.teamDescription = team.getDescription();
         this.maxMember = team.getMaxMember();
         this.numMember = team.getNumMember();
+        this.isLeader = false;
     }
 }
