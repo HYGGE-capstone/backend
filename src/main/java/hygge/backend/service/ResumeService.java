@@ -42,4 +42,12 @@ public class ResumeService {
 
         return new ResumeDto(saveResume);
     }
+
+    @Transactional(readOnly = true)
+    public ResumeDto getResumeBySubjectAndMember(Long subjectId, Long memberId) {
+        Resume resume = resumeRepository.findBySubjectIdAndMemberId(subjectId, memberId)
+                .orElseThrow(() -> new BusinessException("요청하신 이력서를 찾을 수 없습니다."));
+
+        return new ResumeDto(resume);
+    }
 }

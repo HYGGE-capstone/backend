@@ -12,10 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -40,6 +37,20 @@ public class ResumeController {
         Long memberId = Long.parseLong(principal.getName());
 
         ResumeDto response = resumeService.postResume(memberId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "과목에 해당하는 멤버 이력서 조회 메서드", description = "과목에 해당하는 멤버 이력서 조회 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이력서 조회 성공",
+                    content = @Content(schema = @Schema(implementation = ResumeDto.class))),
+            @ApiResponse(responseCode = "400", description = "이력서 조회 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
+    @GetMapping("/subject/{subjectId}/member/{memberId}")
+    public ResponseEntity<ResumeDto> getResumeBySubjectAndMember(@PathVariable Long subjectId, @PathVariable Long memberId) {
+        ResumeDto response = resumeService.getResumeBySubjectAndMember(subjectId, memberId);
         return ResponseEntity.ok(response);
     }
 }
