@@ -1,10 +1,14 @@
 package hygge.backend.service;
 
+import hygge.backend.dto.NotificationDto;
 import hygge.backend.dto.notification.NewSubscriberNotiDto;
 import hygge.backend.dto.notification.NewTeamNotiDto;
+import hygge.backend.dto.response.notification.NotificationListDto;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Notification;
 import hygge.backend.entity.NotificationCase;
+import hygge.backend.error.exception.BusinessException;
+import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.NotificationRepository;
 import hygge.backend.repository.SubscribeRepository;
 import hygge.backend.repository.TeamRepository;
@@ -22,6 +26,7 @@ import java.util.stream.Collectors;
 public class NotificaitonService {
 
     private final SubscribeRepository subscribeRepository;
+    private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
     private final NotificationRepository notificationRepository;
 
@@ -72,6 +77,20 @@ public class NotificaitonService {
 
             notificationRepository.save(notification);
         }
+    }
+
+
+    // 알림 불러오기 메서드
+    @Transactional(readOnly = true)
+    public NotificationListDto getNotifications(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException("해당하는 멤버를 찾을 수 없습니다."));
+
+        List<NotificationDto> notificationDtoList = member.getNotifications()
+                .stream().map(notification -> new NotificationDto(notification)).collect(Collectors.toList());
+
+        return NotificationListDto.builder()
+                .notifications(notificationDtoList).build();
     }
 
     public String newTeamContent(String teamName){
