@@ -2,8 +2,10 @@ package hygge.backend.service;
 
 import hygge.backend.dto.SubjectDto;
 import hygge.backend.dto.SubscribeDto;
+import hygge.backend.dto.notification.NewSubscriberNotiDto;
 import hygge.backend.dto.response.subscribe.SubscribeResponse;
 import hygge.backend.entity.Member;
+import hygge.backend.entity.NotificationCase;
 import hygge.backend.entity.Subject;
 import hygge.backend.entity.Subscribe;
 import hygge.backend.error.exception.BusinessException;
@@ -28,6 +30,8 @@ public class SubscribeService {
     private final MemberRepository memberRepository;
     private final SubjectRepository subjectRepository;
 
+    private final NotificaitonService notificaitonService;
+
     @Transactional
     public SubscribeDto subscribe(SubscribeDto subscribeDto) {
         Member member = memberRepository.findById(subscribeDto.getMemberId())
@@ -45,6 +49,16 @@ public class SubscribeService {
                                 .build();
 
         subscribeRepository.save(subscribe);
+
+        // 팀 리더들에게 새로운 구독자 알림 전송
+        NewSubscriberNotiDto newSubscriberNotiDto = NewSubscriberNotiDto.builder()
+                .subjectId(subject.getId())
+                .subjectCode(subject.getCode())
+                .subjectName(subject.getName())
+                .subscriberNickname(member.getNickname())
+                .subscriberLoginId(member.getLoginId())
+                .build();
+        notificaitonService.sendNotification(NotificationCase.NEW_SUBSCRIBER, newSubscriberNotiDto);
 
         return subscribeDto;
     }
