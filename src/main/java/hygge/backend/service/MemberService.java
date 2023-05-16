@@ -6,6 +6,7 @@ import hygge.backend.dto.request.SignupRequest;
 import hygge.backend.dto.request.TokenRequest;
 import hygge.backend.dto.response.EmailResponse;
 import hygge.backend.dto.response.LoginIdResponse;
+import hygge.backend.dto.response.LoginResponse;
 import hygge.backend.dto.response.SignupResponse;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.RefreshToken;
@@ -104,7 +105,7 @@ public class MemberService {
     }
 
     @Transactional
-    public TokenDto login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
         // 1. Login ID/PW 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginRequest.toAuthentication();
 
@@ -124,8 +125,16 @@ public class MemberService {
 
         refreshTokenRepository.save(refreshToken);
 
+        Member loginMember = memberRepository.findByLoginId(loginRequest.getLoginId())
+                .orElseThrow(() -> new BusinessException("해당하는 멤버를 찾을 수 없습니다."));
+
         // 5. 토큰 발급
-        return tokenDto;
+        return LoginResponse.builder()
+                .accessToken(tokenDto.getAccessToken())
+                .refreshToken(tokenDto.getRefreshToken())
+                .loginId(loginMember.getLoginId())
+                .nickname(loginMember.getNickname())
+                .build();
     }
 
     @Transactional

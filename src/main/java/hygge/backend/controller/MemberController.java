@@ -81,13 +81,13 @@ public class MemberController {
     @Operation(summary = "로그인 메서드", description = "로그인 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그인 성공",
-                    content = @Content(schema = @Schema(implementation = TokenDto.class))),
+                    content = @Content(schema = @Schema(implementation = LoginResponse.class))),
             @ApiResponse(responseCode = "400", description = "로그인 실패",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
 
     })
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(memberService.login(loginRequest));
     }
 
