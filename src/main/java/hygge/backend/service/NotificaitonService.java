@@ -223,9 +223,7 @@ public class NotificaitonService {
         List<Notification> notifications = member.getNotifications();
         Collections.sort(notifications, comparator);
 
-        log.info(notifications.get(0).getId().toString());
-
-        if (!notifications.get(0).isOpened()) {
+        if (!notifications.isEmpty() && !notifications.get(0).isOpened()) {
             return NotiDirtyCheck.builder().isDirty(true).build();
         } else {
             return NotiDirtyCheck.builder().isDirty(false).build();
