@@ -170,13 +170,12 @@ public class TeamService {
         List<Member> subscribers = subscribeRepository.findBySubjectId(subjectId)
                 .stream().map(subscribe -> subscribe.getMember()).collect(Collectors.toList());
 
-        boolean notBelongTeam;
         List<SubscribersNotBelongTeamDto> subscribersNotBelongTeamDtoList = new ArrayList<>();
 
         for (Member subscriber : subscribers) {
-            notBelongTeam = true;
+            boolean notBelongTeam = true;
             for (MemberTeam memberTeam : subscriber.getMemberTeams()) {
-                if(memberTeam.getTeam().getSubject().getId() == subjectId){
+                if(memberTeam.getTeam().getSubject().getId().equals(subjectId)){
                     notBelongTeam = false;
                     break;
                 }
