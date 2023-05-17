@@ -1,20 +1,15 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.NotificationDto;
-import hygge.backend.dto.notification.NewApplicantNotiDto;
-import hygge.backend.dto.notification.NewOfferResultNotiDto;
-import hygge.backend.dto.notification.NewSubscriberNotiDto;
-import hygge.backend.dto.notification.NewTeamNotiDto;
+import hygge.backend.dto.notification.*;
 import hygge.backend.dto.response.notification.NotiDirtyCheck;
 import hygge.backend.dto.response.notification.NotificationListDto;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Notification;
 import hygge.backend.entity.NotificationCase;
+import hygge.backend.entity.Team;
 import hygge.backend.error.exception.BusinessException;
-import hygge.backend.repository.MemberRepository;
-import hygge.backend.repository.NotificationRepository;
-import hygge.backend.repository.SubscribeRepository;
-import hygge.backend.repository.TeamRepository;
+import hygge.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +29,8 @@ public class NotificaitonService {
     private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
     private final NotificationRepository notificationRepository;
+
+    private final MemberTeamRepository memberTeamRepository;
 
     // 새로운 팀 생성 알림
     @Transactional
@@ -124,11 +121,11 @@ public class NotificaitonService {
         if (newOfferResultNotiDto.isAccept()) {
             content = newOfferResultNotiDto.getApplicantNickname()
                     + "(" + newOfferResultNotiDto.getApplicantLoginId() + ")"
-                    + " 님이 제알을 수락하였습니다.";
+                    + " 님이 제안을 수락하였습니다.";
         } else {
             content = newOfferResultNotiDto.getApplicantNickname()
                     + "(" + newOfferResultNotiDto.getApplicantLoginId() + ")"
-                    + " 님이 제알을 거절하였습니다.";
+                    + " 님이 제안을 거절하였습니다.";
         }
 
         Notification notification = Notification.builder()
@@ -141,6 +138,29 @@ public class NotificaitonService {
         notificationRepository.save(notification);
     }
 
+    // 새로운 팀원 알림
+    @Transactional
+    public void sendNotification(NotificationCase notiCase, NewTeamMemberNotiDto newTeamMemberNotiDto) {
+        log.info("{} NOTIFICATION SEND", notiCase);
+        String from = newTeamMemberNotiDto.getTeamName();
+        String content =
+                newTeamMemberContent(newTeamMemberNotiDto.getMemberNickname(),
+                        newTeamMemberNotiDto.getMemberLoginId());
+
+        List<Member> members = memberTeamRepository.findByTeamId(newTeamMemberNotiDto.getTeamId()).stream()
+                .map(memberTeam -> memberTeam.getMember()).collect(Collectors.toList());
+
+        for (Member member : members) {
+            Notification notification = Notification.builder()
+                    .from(from)
+                    .to(member)
+                    .content(content)
+                    .isOpened(false)
+                    .build();
+            notificationRepository.save(notification);
+        }
+
+    }
 
     // 알림 불러오기 메서드
     @Transactional
@@ -187,7 +207,7 @@ public class NotificaitonService {
     }
 
     public String newTeamContent(String teamName){
-        return "새로운 팀 \"" + teamName + "\" 이 생성되었습니다.";
+        return "새로운 팀 \"" + teamName + "\" 이(가) 생성되었습니다.";
     }
 
     public String newApplicantContent(String nickname, String loginId) {
@@ -207,6 +227,6 @@ public class NotificaitonService {
     }
 
     public String newTeamMemberContent(String nickname, String loginId) {
-        return nickname + "(" + loginId + ")" + " 님이 팀에 합하였습니다.";
+        return nickname + "(" + loginId + ")" + " 님이 팀에 합류류였습니다.";
     }
 }

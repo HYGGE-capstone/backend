@@ -4,6 +4,7 @@ import hygge.backend.dto.ApplicantDto;
 import hygge.backend.dto.ApplyResultDto;
 import hygge.backend.dto.notification.NewApplicantNotiDto;
 import hygge.backend.dto.notification.NewOfferResultNotiDto;
+import hygge.backend.dto.notification.NewTeamMemberNotiDto;
 import hygge.backend.dto.request.teamapplicant.ApplyRequest;
 import hygge.backend.dto.request.teamapplicant.ApplyResultRequestDto;
 import hygge.backend.dto.response.teamapplicant.ApplyResponse;
@@ -124,6 +125,16 @@ public class TeamApplicantService {
                 .build();
 
         notificaitonService.sendNotification(NotificationCase.NEW_OFFER_RESULT, newOfferResultNotiDto);
+
+        // 새로운 팀원 알림
+        NewTeamMemberNotiDto newTeamMemberNotiDto = NewTeamMemberNotiDto.builder()
+                .memberLoginId(applicant.getLoginId())
+                .memberNickname(applicant.getNickname())
+                .teamId(team.getId())
+                .teamName(team.getName())
+                .build();
+
+        notificaitonService.sendNotification(NotificationCase.NEW_TEAM_MEMBER, newTeamMemberNotiDto);
 
         return ApplyResultDto.builder()
                 .applicantId(applicant.getId())

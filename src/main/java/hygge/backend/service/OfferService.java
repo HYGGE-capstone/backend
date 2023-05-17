@@ -2,6 +2,7 @@ package hygge.backend.service;
 
 import hygge.backend.dto.OfferResultDto;
 import hygge.backend.dto.OfferTeamDto;
+import hygge.backend.dto.notification.NewTeamMemberNotiDto;
 import hygge.backend.dto.request.offer.OfferRequest;
 import hygge.backend.dto.request.offer.OfferResultRequestDto;
 import hygge.backend.dto.response.offer.GetOffersResponse;
@@ -28,6 +29,7 @@ public class OfferService {
     private final TeamRepository teamRepository;
 
     private final MemberTeamRepository memberTeamRepository;
+    private final NotificaitonService notificaitonService;
 
     @Transactional(readOnly = true)
     public GetOffersResponse getOffers(Long memberId, Long subjectId) {
@@ -106,6 +108,17 @@ public class OfferService {
         teamRepository.save(team);
 
         offerRepository.delete(offer);
+
+        // 새로운 팀원 알림
+        NewTeamMemberNotiDto newTeamMemberNotiDto = NewTeamMemberNotiDto.builder()
+                .memberLoginId(member.getLoginId())
+                .memberNickname(member.getNickname())
+                .teamName(team.getName())
+                .teamId(team.getId())
+                .build();
+
+        notificaitonService.sendNotification(NotificationCase.NEW_TEAM_MEMBER, newTeamMemberNotiDto);
+
 
         return OfferResultDto.builder()
                 .subscriberId(member.getId())
