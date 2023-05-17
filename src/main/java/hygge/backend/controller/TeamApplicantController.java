@@ -1,6 +1,8 @@
 package hygge.backend.controller;
 
+import hygge.backend.dto.ApplyResultDto;
 import hygge.backend.dto.request.teamapplicant.ApplyRequest;
+import hygge.backend.dto.request.teamapplicant.ApplyResultRequestDto;
 import hygge.backend.dto.response.teamapplicant.ApplyResponse;
 import hygge.backend.dto.response.teamapplicant.GetApplicantsResponse;
 import hygge.backend.service.TeamApplicantService;
@@ -33,6 +35,18 @@ public class TeamApplicantController {
     }
 
     // 지원자의 지원을 수락 POST
+    @PostMapping("/accept")
+    public ResponseEntity<ApplyResultDto> applyAccept(Principal principal, @RequestBody ApplyResultRequestDto request) {
+        Long memberId = Long.parseLong(principal.getName());
+        ApplyResultDto response = teamApplicantService.applyAccept(memberId, request);
+        return ResponseEntity.ok(response);
+    }
 
     // 지원자의 지원을 거절 POST
+    @PostMapping("/reject")
+    public ResponseEntity<ApplyResultDto> applyReject(Principal principal, @RequestBody ApplyResultRequestDto request) {
+        Long memberId = Long.parseLong(principal.getName());
+        ApplyResultDto response = teamApplicantService.applyReject(memberId, request);
+        return ResponseEntity.ok(response);
+    }
 }

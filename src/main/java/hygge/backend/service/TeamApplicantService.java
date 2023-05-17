@@ -1,14 +1,18 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.ApplicantDto;
+import hygge.backend.dto.ApplyResultDto;
 import hygge.backend.dto.request.teamapplicant.ApplyRequest;
+import hygge.backend.dto.request.teamapplicant.ApplyResultRequestDto;
 import hygge.backend.dto.response.teamapplicant.ApplyResponse;
 import hygge.backend.dto.response.teamapplicant.GetApplicantsResponse;
 import hygge.backend.entity.Member;
+import hygge.backend.entity.MemberTeam;
 import hygge.backend.entity.Team;
 import hygge.backend.entity.TeamApplicant;
 import hygge.backend.error.exception.BusinessException;
 import hygge.backend.repository.MemberRepository;
+import hygge.backend.repository.MemberTeamRepository;
 import hygge.backend.repository.TeamApplicantRepository;
 import hygge.backend.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ public class TeamApplicantService {
     private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
     private final TeamApplicantRepository teamApplicantRepository;
+    private final MemberTeamRepository memberTeamRepository;
 
     @Transactional(readOnly = true)
     public GetApplicantsResponse getApplicants(Long memberId, Long teamId) {
@@ -68,5 +73,59 @@ public class TeamApplicantService {
         TeamApplicant savedTeamApplicant = teamApplicantRepository.save(teamApplicant);
 
         return new ApplyResponse(savedTeamApplicant);
+    }
+
+    @Transactional
+    public ApplyResultDto applyAccept(Long memberId, ApplyResultRequestDto request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+
+        TeamApplicant teamApplicant = teamApplicantRepository.findById(request.getTeamApplicantId())
+                .orElseThrow(() -> new BusinessException("요청하신 팀 지원을 찾을 수 없습니다."));
+
+        Team team = teamApplicant.getTeam();
+
+        Member applicant = teamApplicant.getApplicant();
+
+        if(member.getId() != team.getLeader().getId()) throw new BusinessException("요청할 권한이 없습니다.");
+
+        if(team.getNumMember() + 1 >= team.getMaxMember()) throw new BusinessException("더 이상 팀원을 받을 수 없습니다.");
+
+        MemberTeam memberTeam = MemberTeam.builder().team(team).member(applicant).build();
+        memberTeamRepository.save(memberTeam);
+
+        team.joinMember();
+        teamRepository.save(team);
+
+        teamApplicantRepository.delete(teamApplicant);
+
+        return ApplyResultDto.builder()
+                .applicantId(applicant.getId())
+                .teamId(team.getId())
+                .result("ACCEPT")
+                .build();
+    }
+
+    @Transactional
+    public ApplyResultDto applyReject(Long memberId, ApplyResultRequestDto request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+
+        TeamApplicant teamApplicant = teamApplicantRepository.findById(request.getTeamApplicantId())
+                .orElseThrow(() -> new BusinessException("요청하신 팀 지원을 찾을 수 없습니다."));
+
+        Team team = teamApplicant.getTeam();
+
+        Member applicant = teamApplicant.getApplicant();
+
+        if(member.getId() != team.getLeader().getId()) throw new BusinessException("요청할 권한이 없습니다.");
+
+        teamApplicantRepository.delete(teamApplicant);
+
+        return ApplyResultDto.builder()
+                .applicantId(applicant.getId())
+                .teamId(team.getId())
+                .result("REJECT")
+                .build();
     }
 }

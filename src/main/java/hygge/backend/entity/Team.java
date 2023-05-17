@@ -58,4 +58,8 @@ public class Team {
         this.numMember = numMember;
     }
 
+    public void joinMember() {
+        this.numMember += 1;
+    }
+
 }
