@@ -2,14 +2,12 @@ package hygge.backend.service;
 
 import hygge.backend.dto.ApplicantDto;
 import hygge.backend.dto.ApplyResultDto;
+import hygge.backend.dto.notification.NewApplicantNotiDto;
 import hygge.backend.dto.request.teamapplicant.ApplyRequest;
 import hygge.backend.dto.request.teamapplicant.ApplyResultRequestDto;
 import hygge.backend.dto.response.teamapplicant.ApplyResponse;
 import hygge.backend.dto.response.teamapplicant.GetApplicantsResponse;
-import hygge.backend.entity.Member;
-import hygge.backend.entity.MemberTeam;
-import hygge.backend.entity.Team;
-import hygge.backend.entity.TeamApplicant;
+import hygge.backend.entity.*;
 import hygge.backend.error.exception.BusinessException;
 import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.MemberTeamRepository;
@@ -32,6 +30,8 @@ public class TeamApplicantService {
     private final TeamRepository teamRepository;
     private final TeamApplicantRepository teamApplicantRepository;
     private final MemberTeamRepository memberTeamRepository;
+
+    private final NotificaitonService notificaitonService;
 
     @Transactional(readOnly = true)
     public GetApplicantsResponse getApplicants(Long memberId, Long teamId) {
@@ -73,6 +73,16 @@ public class TeamApplicantService {
                                                 .build();
 
         TeamApplicant savedTeamApplicant = teamApplicantRepository.save(teamApplicant);
+
+        // 새로운 지원자 알림
+        NewApplicantNotiDto newApplicantNotiDto = NewApplicantNotiDto.builder()
+                .applicantLoginId(member.getLoginId())
+                .applicantNickname(member.getNickname())
+                .teamName(team.getName())
+                .leaderId(team.getLeader().getId())
+                .build();
+
+        notificaitonService.sendNotification(NotificationCase.NEW_APPLICANT, newApplicantNotiDto);
 
         return new ApplyResponse(savedTeamApplicant);
     }

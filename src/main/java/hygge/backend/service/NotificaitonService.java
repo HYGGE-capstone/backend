@@ -1,6 +1,7 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.NotificationDto;
+import hygge.backend.dto.notification.NewApplicantNotiDto;
 import hygge.backend.dto.notification.NewSubscriberNotiDto;
 import hygge.backend.dto.notification.NewTeamNotiDto;
 import hygge.backend.dto.response.notification.NotificationListDto;
@@ -77,6 +78,30 @@ public class NotificaitonService {
 
             notificationRepository.save(notification);
         }
+    }
+
+    // 새로운 지원자 알림
+    public void sendNotification(NotificationCase notiCase, NewApplicantNotiDto newApplicantNotiDto){
+        log.info("{} NOTIFICATION SEND", notiCase);
+        Member leader = memberRepository.findById(newApplicantNotiDto.getLeaderId())
+                .orElseThrow(() -> new BusinessException("해당하는 멤버를 찾을 수 없습니다."));
+
+        // - from : 팀 이름
+        String from = newApplicantNotiDto.getTeamName();
+
+        //  - content : <지원자 닉네임>(<지원자 로그인 아이디>) 님이 팀에 지원하였습니다.
+        String content = newApplicantNotiDto.getApplicantNickname() +
+                "(" + newApplicantNotiDto.getApplicantLoginId() + ")"
+                + " 님이 팀에 지원하였습니다.";
+
+        Notification notification = Notification.builder()
+                                        .from(from)
+                                        .to(leader)
+                                        .content(content)
+                                        .isOpened(false)
+                                        .build();
+
+        notificationRepository.save(notification);
     }
 
 
