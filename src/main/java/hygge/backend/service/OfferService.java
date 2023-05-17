@@ -70,7 +70,7 @@ public class OfferService {
         Team team = teamRepository.findById(request.getTeamId())
                 .orElseThrow(()-> new BusinessException("요청하신 팀이 존재하지 않습니다."));
 
-        if(team.getLeader().getId() != leader.getId()) throw new BusinessException("요청할 권한이 없습니다.");
+        if(!team.getLeader().getId().equals(leader.getId())) throw new BusinessException("요청할 권한이 없습니다.");
 
         if (offerRepository.existsByTeamIdAndMemberId(team.getId(), subscriber.getId())) {
             throw new BusinessException("해당 구독자에게 이미 제안하였습니다.");
@@ -81,7 +81,7 @@ public class OfferService {
                 .stream().map(memberTeam -> memberTeam.getTeam()).collect(Collectors.toList());
 
         for (Team belongTeam : belongTeams) {
-            if(belongTeam.getSubject().getId() == team.getSubject().getId())
+            if(belongTeam.getSubject().getId().equals(team.getSubject().getId()))
                 throw new BusinessException("요청하신 과목에 이미 소속된 팀이 있습니다.");
         }
 
@@ -106,7 +106,7 @@ public class OfferService {
 
         List<Offer> offers = offerRepository.findByMemberId(memberId);
 
-        if(team.getNumMember() + 1 >= team.getMaxMember()) throw new BusinessException("더 이상 팀원을 받을 수 없습니다.");
+        if(team.getNumMember() + 1 > team.getMaxMember()) throw new BusinessException("더 이상 팀원을 받을 수 없습니다.");
 
         MemberTeam memberTeam = MemberTeam.builder().member(member).team(team).build();
         memberTeamRepository.save(memberTeam);

@@ -70,7 +70,7 @@ public class TeamApplicantService {
         List<Team> belongTeams = member.getMemberTeams().stream().map(memberTeam -> memberTeam.getTeam()).collect(Collectors.toList());
 
         for (Team belongTeam : belongTeams) {
-            if(belongTeam.getSubject().getId() == team.getSubject().getId())
+            if(belongTeam.getSubject().getId().equals(team.getSubject().getId()))
                 throw new BusinessException("요청하신 과목에 이미 소속된 팀이 있습니다.");
         }
 
@@ -108,9 +108,9 @@ public class TeamApplicantService {
 
         Member applicant = teamApplicant.getApplicant();
 
-        if(member.getId() != team.getLeader().getId()) throw new BusinessException("요청할 권한이 없습니다.");
+        if(!member.getId().equals(team.getLeader().getId())) throw new BusinessException("요청할 권한이 없습니다.");
 
-        if(team.getNumMember() + 1 >= team.getMaxMember()) throw new BusinessException("더 이상 팀원을 받을 수 없습니다.");
+        if(team.getNumMember() + 1 > team.getMaxMember()) throw new BusinessException("더 이상 팀원을 받을 수 없습니다.");
 
         MemberTeam memberTeam = MemberTeam.builder().team(team).member(applicant).build();
         memberTeamRepository.save(memberTeam);
