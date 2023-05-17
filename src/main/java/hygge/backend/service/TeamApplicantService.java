@@ -61,6 +61,10 @@ public class TeamApplicantService {
         Team team = teamRepository.findById(request.getTeamId())
                 .orElseThrow(()-> new BusinessException("요청하신 팀이 존재하지 않습니다."));
 
+        if (teamApplicantRepository.existsByTeamIdAndApplicantId(team.getId(), member.getId())) {
+            throw new BusinessException("이미 해당 팀에 지원하였습니다.");
+        }
+
         // 해당 과목에 이미 소속된 팀이 있는지 검증
         List<Team> belongTeams = member.getMemberTeams().stream().map(memberTeam -> memberTeam.getTeam()).collect(Collectors.toList());
 

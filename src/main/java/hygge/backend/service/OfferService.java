@@ -71,6 +71,10 @@ public class OfferService {
 
         if(team.getLeader().getId() != leader.getId()) throw new BusinessException("요청할 권한이 없습니다.");
 
+        if (offerRepository.existsByTeamIdAndMemberId(team.getId(), subscriber.getId())) {
+            throw new BusinessException("해당 구독자에게 이미 제안하였습니다.");
+        }
+
         // 해당 과목에 이미 소속된 팀이 있는지 검증
         List<Team> belongTeams = subscriber.getMemberTeams()
                 .stream().map(memberTeam -> memberTeam.getTeam()).collect(Collectors.toList());
