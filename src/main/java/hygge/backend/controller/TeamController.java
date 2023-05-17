@@ -5,6 +5,7 @@ import hygge.backend.dto.request.team.CreateTeamRequest;
 import hygge.backend.dto.response.ErrorResponse;
 import hygge.backend.dto.response.team.CreateTeamResponse;
 import hygge.backend.dto.response.team.GetMembersByTeamResponse;
+import hygge.backend.dto.response.team.GetSubscribersNotBelongTeamResponse;
 import hygge.backend.dto.response.team.TeamResponse;
 import hygge.backend.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,6 +79,20 @@ public class TeamController {
     @GetMapping("/members")
     public ResponseEntity<GetMembersByTeamResponse> getMembersByTeam(@RequestParam Long teamId) {
         GetMembersByTeamResponse response = teamService.getMembersByTeam(teamId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "팀 미소속 구독자 조회 메서드", description = "팀에 속하지 않은 구독자를 조회하는 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공.",
+                    content = @Content(schema = @Schema(implementation = GetSubscribersNotBelongTeamResponse.class))),
+            @ApiResponse(responseCode = "400", description = "조회 실패.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/subscribers")
+    public ResponseEntity<GetSubscribersNotBelongTeamResponse> getSubscribersNotBelongTeam(Principal principal, @RequestParam Long subjectId){
+        Long memberId = Long.parseLong(principal.getName());
+        GetSubscribersNotBelongTeamResponse response = teamService.getSubscribersNotBelongTeam(memberId, subjectId);
         return ResponseEntity.ok(response);
     }
 

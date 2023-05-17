@@ -3,16 +3,10 @@ package hygge.backend.service;
 import hygge.backend.dto.TeamDto;
 import hygge.backend.dto.notification.NewTeamNotiDto;
 import hygge.backend.dto.request.team.CreateTeamRequest;
-import hygge.backend.dto.response.team.CreateTeamResponse;
-import hygge.backend.dto.response.team.GetMembersByTeamResponse;
-import hygge.backend.dto.response.team.MembersByTeamDto;
-import hygge.backend.dto.response.team.TeamResponse;
+import hygge.backend.dto.response.team.*;
 import hygge.backend.entity.*;
 import hygge.backend.error.exception.BusinessException;
-import hygge.backend.repository.MemberRepository;
-import hygge.backend.repository.MemberTeamRepository;
-import hygge.backend.repository.SubjectRepository;
-import hygge.backend.repository.TeamRepository;
+import hygge.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +28,7 @@ public class TeamService {
     private final MemberTeamRepository memberTeamRepository;
 
     private final NotificaitonService notificaitonService;
+    private final SubscribeRepository subscribeRepository;
 
     @Transactional
     public CreateTeamResponse createTeam(Long memberId, CreateTeamRequest request) {
@@ -168,5 +163,28 @@ public class TeamService {
                 .stream().map(memberTeam -> new MembersByTeamDto(memberTeam.getMember(), leaderId)).collect(Collectors.toList());
 
         return GetMembersByTeamResponse.builder().members(members).build();
+    }
+
+    @Transactional(readOnly = true)
+    public GetSubscribersNotBelongTeamResponse getSubscribersNotBelongTeam(Long leaderId, Long subjectId) {
+        List<Member> subscribers = subscribeRepository.findBySubjectId(subjectId)
+                .stream().map(subscribe -> subscribe.getMember()).collect(Collectors.toList());
+
+        boolean notBelongTeam;
+        List<SubscribersNotBelongTeamDto> subscribersNotBelongTeamDtoList = new ArrayList<>();
+
+        for (Member subscriber : subscribers) {
+            notBelongTeam = true;
+            for (MemberTeam memberTeam : subscriber.getMemberTeams()) {
+                if(memberTeam.getTeam().getSubject().getId() == subjectId){
+                    notBelongTeam = false;
+                    break;
+                }
+            }
+            if(notBelongTeam) subscribersNotBelongTeamDtoList.add(new SubscribersNotBelongTeamDto(subscriber));
+        }
+
+        return GetSubscribersNotBelongTeamResponse.builder().members(subscribersNotBelongTeamDtoList).build();
+
     }
 }
