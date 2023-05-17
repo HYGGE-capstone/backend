@@ -50,7 +50,7 @@ public class OfferService {
 
         for (Offer offer : offers) {
             offerSubjectId = offer.getTeam().getSubject().getId();
-            if (offerSubjectId == subjectId) {
+            if (offerSubjectId.equals(subjectId)) {
                 offerTeams.add(new OfferTeamDto(offer.getTeam(), offer.getId()));
             }
         }
@@ -104,6 +104,8 @@ public class OfferService {
                 .orElseThrow(() -> new BusinessException("요청하신 팀 합류 제안을 찾을 수 없습니다."));
         Team team = offer.getTeam();
 
+        List<Offer> offers = offerRepository.findByMemberId(memberId);
+
         if(team.getNumMember() + 1 >= team.getMaxMember()) throw new BusinessException("더 이상 팀원을 받을 수 없습니다.");
 
         MemberTeam memberTeam = MemberTeam.builder().member(member).team(team).build();
@@ -112,7 +114,11 @@ public class OfferService {
         team.joinMember();
         teamRepository.save(team);
 
-        offerRepository.delete(offer);
+        for (Offer offer1 : offers) {
+            if (offer1.getTeam().getSubject().getId().equals(team.getSubject().getId())) {
+                offerRepository.delete(offer1);
+            }
+        }
 
         // 새로운 팀원 알림
         NewTeamMemberNotiDto newTeamMemberNotiDto = NewTeamMemberNotiDto.builder()
@@ -156,7 +162,6 @@ public class OfferService {
 
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new BusinessException("요청하신 팀을 찾을 수 없습니다."));
-
 
 
         offerRepository.delete(offer);
