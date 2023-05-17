@@ -162,6 +162,32 @@ public class NotificaitonService {
 
     }
 
+    // 새로운 지원 결과 알림
+    @Transactional
+    public void sendNotification(NotificationCase notiCase, NewApplyResultNotiDto newApplyResultNotiDto) {
+        log.info("{} NOTIFICATION SEND", notiCase);
+        Member member = memberRepository.findById(newApplyResultNotiDto.getApplicantId())
+                .orElseThrow(() -> new BusinessException("요청하신 회원을 찾을 수 없습니다."));
+        String from = newApplyResultNotiDto.getTeamName();
+        String content = "";
+        if(newApplyResultNotiDto.isAccept()){
+            content = newApplyResultNotiDto.getTeamName() +
+                    "에서 지원을 수락하였습니다.";
+        }else{
+            content = newApplyResultNotiDto.getTeamName() +
+                    "에서 지원을 거절하였습니다.";
+        }
+
+        Notification notification = Notification.builder()
+                .from(from)
+                .to(member)
+                .content(content)
+                .isOpened(false)
+                .build();
+        notificationRepository.save(notification);
+
+    }
+
     // 알림 불러오기 메서드
     @Transactional
     public NotificationListDto getNotifications(Long memberId) {
