@@ -59,7 +59,7 @@ public class Team {
     }
 
     public void joinMember() {
-        this.numMember += 1;
+        this.numMember += 1;름
     }
 
 }
