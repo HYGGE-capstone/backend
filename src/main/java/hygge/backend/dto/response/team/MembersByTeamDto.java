@@ -19,7 +19,7 @@ public class MembersByTeamDto {
     public MembersByTeamDto(Member member, Long leaderId) {
         this.memberId = member.getId();
         this.loginId = member.getLoginId();
-        this.nickname = member.getLoginId();
+        this.nickname = member.getNickname();
 
         if (member.getId() == leaderId) {
             this.isLeader = true;
