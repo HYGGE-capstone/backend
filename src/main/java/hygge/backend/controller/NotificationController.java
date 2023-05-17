@@ -1,5 +1,6 @@
 package hygge.backend.controller;
 
+import hygge.backend.dto.response.notification.NotiDirtyCheck;
 import hygge.backend.dto.response.notification.NotificationListDto;
 import hygge.backend.service.NotificaitonService;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,11 @@ public class NotificationController {
     public NotificationListDto getNotifications(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
         return notificaitonService.getNotifications(memberId);
+    }
+
+    @GetMapping("/check")
+    public NotiDirtyCheck notiDirtyCheck(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        return notificaitonService.notiDirtyCheck(memberId);
     }
 }

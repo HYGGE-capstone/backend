@@ -5,6 +5,7 @@ import hygge.backend.dto.notification.NewApplicantNotiDto;
 import hygge.backend.dto.notification.NewOfferResultNotiDto;
 import hygge.backend.dto.notification.NewSubscriberNotiDto;
 import hygge.backend.dto.notification.NewTeamNotiDto;
+import hygge.backend.dto.response.notification.NotiDirtyCheck;
 import hygge.backend.dto.response.notification.NotificationListDto;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Notification;
@@ -19,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -157,6 +160,30 @@ public class NotificaitonService {
 
         return NotificationListDto.builder()
                 .notifications(notificationDtoList).build();
+    }
+
+    @Transactional(readOnly = true)
+    public NotiDirtyCheck notiDirtyCheck(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException("요청하신 멤버를 찾을 수 없습니다."));
+
+        Comparator<Notification> comparator = new Comparator<Notification>() {
+            @Override
+            public int compare(Notification o1, Notification o2) {
+                return o2.getCreatedTime().compareTo(o1.getCreatedTime());
+            }
+        };
+
+        List<Notification> notifications = member.getNotifications();
+        Collections.sort(notifications, comparator);
+
+        log.info(notifications.get(0).getId().toString());
+
+        if (!notifications.get(0).isOpened()) {
+            return NotiDirtyCheck.builder().isDirty(true).build();
+        } else {
+            return NotiDirtyCheck.builder().isDirty(false).build();
+        }
     }
 
     public String newTeamContent(String teamName){
