@@ -47,7 +47,7 @@ public class TeamApplicantService {
         if(member.getId() != team.getLeader().getId()) throw new BusinessException("요청할 권한이 없습니다.");
 
         List<ApplicantDto> applicants = team.getTeamApplicants()
-                .stream().map(teamApplicant -> new ApplicantDto(teamApplicant.getApplicant())).collect(Collectors.toList());
+                .stream().map(teamApplicant -> new ApplicantDto(teamApplicant.getApplicant(), teamApplicant.getId())).collect(Collectors.toList());
 
         return GetApplicantsResponse.builder().applicants(applicants).build();
     }
@@ -119,17 +119,6 @@ public class TeamApplicantService {
 
         teamApplicantRepository.delete(teamApplicant);
 
-        // 지원 수락 알림
-        NewOfferResultNotiDto newOfferResultNotiDto = NewOfferResultNotiDto.builder()
-                .accept(true)
-                .applicantLoginId(applicant.getLoginId())
-                .applicantNickname(applicant.getNickname())
-                .leaderId(memberId)
-                .teamName(team.getName())
-                .build();
-
-        notificaitonService.sendNotification(NotificationCase.NEW_OFFER_RESULT, newOfferResultNotiDto);
-
         // 새로운 팀원 알림
         NewTeamMemberNotiDto newTeamMemberNotiDto = NewTeamMemberNotiDto.builder()
                 .memberLoginId(applicant.getLoginId())
@@ -164,17 +153,6 @@ public class TeamApplicantService {
         if(member.getId() != team.getLeader().getId()) throw new BusinessException("요청할 권한이 없습니다.");
 
         teamApplicantRepository.delete(teamApplicant);
-
-        // 지원 거절 알림
-        NewOfferResultNotiDto newOfferResultNotiDto = NewOfferResultNotiDto.builder()
-                .accept(false)
-                .applicantLoginId(applicant.getLoginId())
-                .applicantNickname(applicant.getNickname())
-                .leaderId(memberId)
-                .teamName(team.getName())
-                .build();
-
-        notificaitonService.sendNotification(NotificationCase.NEW_OFFER_RESULT, newOfferResultNotiDto);
 
         return ApplyResultDto.builder()
                 .applicantId(applicant.getId())

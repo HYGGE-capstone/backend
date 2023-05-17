@@ -2,6 +2,7 @@ package hygge.backend.service;
 
 import hygge.backend.dto.OfferResultDto;
 import hygge.backend.dto.OfferTeamDto;
+import hygge.backend.dto.notification.NewOfferResultNotiDto;
 import hygge.backend.dto.notification.NewTeamMemberNotiDto;
 import hygge.backend.dto.request.offer.OfferRequest;
 import hygge.backend.dto.request.offer.OfferResultRequestDto;
@@ -33,7 +34,7 @@ public class OfferService {
 
     @Transactional(readOnly = true)
     public GetOffersResponse getOffers(Long memberId, Long subjectId) {
-        log.info("OfferService.getOffers");
+        log.info("OfferService.getOffers()");
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
@@ -59,7 +60,7 @@ public class OfferService {
 
     @Transactional
     public OfferResponse offer(Long memberId, OfferRequest request) {
-        log.info("OfferService.offer");
+        log.info("OfferService.offer()");
         Member leader = memberRepository.findById(memberId)
                 .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
 
@@ -123,6 +124,17 @@ public class OfferService {
 
         notificaitonService.sendNotification(NotificationCase.NEW_TEAM_MEMBER, newTeamMemberNotiDto);
 
+        // 제안 수락 알림
+        NewOfferResultNotiDto newOfferResultNotiDto = NewOfferResultNotiDto.builder()
+                .accept(true)
+                .applicantLoginId(member.getLoginId())
+                .applicantNickname(member.getNickname())
+                .leaderId(team.getLeader().getId())
+                .teamName(team.getName())
+                .build();
+
+        notificaitonService.sendNotification(NotificationCase.NEW_OFFER_RESULT, newOfferResultNotiDto);
+
 
         return OfferResultDto.builder()
                 .subscriberId(member.getId())
@@ -133,12 +145,32 @@ public class OfferService {
 
     @Transactional
     public OfferResultDto offerReject(Long memberId, OfferResultRequestDto request) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException("요청하신 멤버를 찾을 수 없습니다."));
+
         Offer offer = offerRepository.findById(request.getOfferId())
                 .orElseThrow(() -> new BusinessException("요청하신 팀 합류 제안을 찾을 수 없습니다."));
 
         Long teamId = offer.getTeam().getId();
 
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new BusinessException("요청하신 팀을 찾을 수 없습니다."));
+
+
+
         offerRepository.delete(offer);
+
+        // 제안 거절 알림
+        NewOfferResultNotiDto newOfferResultNotiDto = NewOfferResultNotiDto.builder()
+                .accept(false)
+                .applicantLoginId(member.getLoginId())
+                .applicantNickname(member.getNickname())
+                .leaderId(team.getLeader().getId())
+                .teamName(team.getName())
+                .build();
+
+        notificaitonService.sendNotification(NotificationCase.NEW_OFFER_RESULT, newOfferResultNotiDto);
 
         return OfferResultDto.builder()
                 .subscriberId(memberId)

@@ -13,15 +13,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ApplicantDto {
     @Schema(description = "지원자 아이디", defaultValue = "0")
-    private Long id;
+    private Long applicantId;
     @Schema(description = "지원자 로그인 아이디", defaultValue = "testId")
-    private String loginId;
+    private String applicantLoginId;
     @Schema(description = "지원자 닉네임", defaultValue = "TESTER")
-    private String nickname;
+    private String applicantNickname;
+    @Schema(description = "지원서 아이디", defaultValue = "0")
+    private Long teamApplicantId;
 
-    public ApplicantDto(Member applicant) {
-        this.id = applicant.getId();
-        this.loginId = applicant.getLoginId();
-        this.nickname = applicant.getNickname();
+
+    public ApplicantDto(Member applicant, Long teamApplicantId) {
+        this.applicantId = applicant.getId();
+        this.applicantLoginId = applicant.getLoginId();
+        this.applicantNickname = applicant.getNickname();
+        this.teamApplicantId = teamApplicantId;
     }
 }
