@@ -3,6 +3,7 @@ package hygge.backend.service;
 import hygge.backend.dto.ApplicantDto;
 import hygge.backend.dto.ApplyResultDto;
 import hygge.backend.dto.notification.NewApplicantNotiDto;
+import hygge.backend.dto.notification.NewOfferResultNotiDto;
 import hygge.backend.dto.request.teamapplicant.ApplyRequest;
 import hygge.backend.dto.request.teamapplicant.ApplyResultRequestDto;
 import hygge.backend.dto.response.teamapplicant.ApplyResponse;
@@ -112,6 +113,17 @@ public class TeamApplicantService {
 
         teamApplicantRepository.delete(teamApplicant);
 
+        // 지원 수락 알림
+        NewOfferResultNotiDto newOfferResultNotiDto = NewOfferResultNotiDto.builder()
+                .accept(true)
+                .applicantLoginId(applicant.getLoginId())
+                .applicantNickname(applicant.getNickname())
+                .leaderId(memberId)
+                .teamName(team.getName())
+                .build();
+
+        notificaitonService.sendNotification(NotificationCase.NEW_OFFER_RESULT, newOfferResultNotiDto);
+
         return ApplyResultDto.builder()
                 .applicantId(applicant.getId())
                 .teamId(team.getId())
@@ -135,6 +147,17 @@ public class TeamApplicantService {
         if(member.getId() != team.getLeader().getId()) throw new BusinessException("요청할 권한이 없습니다.");
 
         teamApplicantRepository.delete(teamApplicant);
+
+        // 지원 거절 알림
+        NewOfferResultNotiDto newOfferResultNotiDto = NewOfferResultNotiDto.builder()
+                .accept(false)
+                .applicantLoginId(applicant.getLoginId())
+                .applicantNickname(applicant.getNickname())
+                .leaderId(memberId)
+                .teamName(team.getName())
+                .build();
+
+        notificaitonService.sendNotification(NotificationCase.NEW_OFFER_RESULT, newOfferResultNotiDto);
 
         return ApplyResultDto.builder()
                 .applicantId(applicant.getId())

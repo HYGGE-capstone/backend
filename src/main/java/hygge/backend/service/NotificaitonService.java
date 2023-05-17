@@ -2,6 +2,7 @@ package hygge.backend.service;
 
 import hygge.backend.dto.NotificationDto;
 import hygge.backend.dto.notification.NewApplicantNotiDto;
+import hygge.backend.dto.notification.NewOfferResultNotiDto;
 import hygge.backend.dto.notification.NewSubscriberNotiDto;
 import hygge.backend.dto.notification.NewTeamNotiDto;
 import hygge.backend.dto.response.notification.NotificationListDto;
@@ -81,6 +82,7 @@ public class NotificaitonService {
     }
 
     // 새로운 지원자 알림
+    @Transactional
     public void sendNotification(NotificationCase notiCase, NewApplicantNotiDto newApplicantNotiDto){
         log.info("{} NOTIFICATION SEND", notiCase);
         Member leader = memberRepository.findById(newApplicantNotiDto.getLeaderId())
@@ -100,6 +102,38 @@ public class NotificaitonService {
                                         .content(content)
                                         .isOpened(false)
                                         .build();
+
+        notificationRepository.save(notification);
+    }
+
+    // 제안 수락 거절 알림
+    @Transactional
+    public void sendNotification(NotificationCase notiCase, NewOfferResultNotiDto newOfferResultNotiDto) {
+        log.info("{} NOTIFICATION SEND", notiCase);
+        Member leader = memberRepository.findById(newOfferResultNotiDto.getLeaderId())
+                .orElseThrow(() -> new BusinessException("해당하는 멤버를 찾을 수 없습니다."));
+
+        // from : 팀 이름
+        String from = newOfferResultNotiDto.getTeamName();
+
+        // content : <지원자 닉네임>(<지원자 로그인 아이디>) 님이 제안을 <수락/거절>하였습니다.
+        String content = null;
+        if (newOfferResultNotiDto.isAccept()) {
+            content = newOfferResultNotiDto.getApplicantNickname()
+                    + "(" + newOfferResultNotiDto.getApplicantLoginId() + ")"
+                    + " 님이 제알을 수락하였습니다.";
+        } else {
+            content = newOfferResultNotiDto.getApplicantNickname()
+                    + "(" + newOfferResultNotiDto.getApplicantLoginId() + ")"
+                    + " 님이 제알을 거절하였습니다.";
+        }
+
+        Notification notification = Notification.builder()
+                .from(from)
+                .to(leader)
+                .content(content)
+                .isOpened(false)
+                .build();
 
         notificationRepository.save(notification);
     }
