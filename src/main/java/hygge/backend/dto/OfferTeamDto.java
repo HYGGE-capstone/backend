@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OfferTeamDto {
+    @Schema(description = "팀 합류 제안 아이디", defaultValue = "0")
+    private Long offerId;
     @Schema(description = "팀 아이디", defaultValue = "11")
     private Long teamId;
 
@@ -31,12 +33,13 @@ public class OfferTeamDto {
     @Schema(description = "현재 멤버 수 ", defaultValue = "1")
     private int numMember;
 
-    public OfferTeamDto(Team team) {
+    public OfferTeamDto(Team team, Long offerId) {
         this.teamId = team.getId();
         this.teamName = team.getName();
         this.teamTitle = team.getTitle();
         this.teamDescription = team.getDescription();
         this.maxMember = team.getMaxMember();
         this.numMember = team.getNumMember();
+        this.offerId = offerId;
     }
 }
