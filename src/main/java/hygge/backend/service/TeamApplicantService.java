@@ -91,6 +91,7 @@ public class TeamApplicantService {
     @Transactional
     public ApplyResultDto applyAccept(Long memberId, ApplyResultRequestDto request) {
         log.info("TeamApplicantService.applyAccept");
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
 
@@ -134,6 +135,7 @@ public class TeamApplicantService {
     @Transactional
     public ApplyResultDto applyReject(Long memberId, ApplyResultRequestDto request) {
         log.info("TeamApplicantService.applyReject");
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
 

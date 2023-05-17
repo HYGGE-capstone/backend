@@ -140,13 +140,20 @@ public class NotificaitonService {
 
 
     // 알림 불러오기 메서드
-    @Transactional(readOnly = true)
+    @Transactional
     public NotificationListDto getNotifications(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException("해당하는 멤버를 찾을 수 없습니다."));
 
         List<NotificationDto> notificationDtoList = member.getNotifications()
                 .stream().map(notification -> new NotificationDto(notification)).collect(Collectors.toList());
+
+        for (Notification notification : member.getNotifications()) {
+            if(!notification.isOpened()) {
+                notification.open();
+                notificationRepository.save(notification);
+            }
+        }
 
         return NotificationListDto.builder()
                 .notifications(notificationDtoList).build();
