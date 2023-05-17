@@ -1,6 +1,7 @@
 package hygge.backend.dto.response.teamapplicant;
 
 import hygge.backend.entity.TeamApplicant;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApplyResponse {
+    @Schema(description = "지원서 아이디", defaultValue = "0")
     private Long teamApplicantId;
+    @Schema(description = "지원자 아이디", defaultValue = "0")
     private Long memberId;
+    @Schema(description = "팀 아이디", defaultValue = "0")
     private Long teamId;
 
     public ApplyResponse(TeamApplicant teamApplicant) {
