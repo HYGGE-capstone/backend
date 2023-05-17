@@ -251,6 +251,6 @@ public class NotificaitonService {
     }
 
     public String newTeamMemberContent(String nickname, String loginId) {
-        return nickname + "(" + loginId + ")" + " 님이 팀에 합류류였습니다.";
+        return nickname + "(" + loginId + ")" + " 님이 팀에 합류하였습니다.";
     }
 }
