@@ -1,6 +1,8 @@
 package hygge.backend.controller;
 
 import hygge.backend.dto.TokenDto;
+import hygge.backend.dto.member.request.LogoutRequest;
+import hygge.backend.dto.member.response.LogoutResponse;
 import hygge.backend.dto.request.LoginRequest;
 import hygge.backend.dto.request.SignupRequest;
 import hygge.backend.dto.response.*;
@@ -78,6 +80,19 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(memberService.login(loginRequest));
+    }
+
+    @Operation(summary = "로그아웃 메서드", description = "로그아웃 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공",
+                    content = @Content(schema = @Schema(implementation = LogoutResponse.class))),
+            @ApiResponse(responseCode = "400", description = "로그아웃 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<LogoutResponse> logout(@RequestBody LogoutRequest request) {
+        return ResponseEntity.ok(memberService.logout(request));
     }
 
     // 아이디 찾기 메서드

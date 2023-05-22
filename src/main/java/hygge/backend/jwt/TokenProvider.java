@@ -64,6 +64,7 @@ public class TokenProvider {
                 .accessToken(accessToken)
                 .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
                 .refreshToken(refreshToken)
+                .refreshTokenExpiresIn(REFRESH_TOKEN_EXPIRE_TIME)
                 .build();
     }
 
@@ -117,5 +118,14 @@ public class TokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    public Long getExpiration(String token) {
+        Date expiration = Jwts.parserBuilder().setSigningKey(key)
+                .build().parseClaimsJws(token).getBody().getExpiration();
+
+        long now = new Date().getTime();
+
+        return (expiration.getTime() - now);
     }
 }

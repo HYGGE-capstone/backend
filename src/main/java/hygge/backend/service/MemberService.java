@@ -1,6 +1,8 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.TokenDto;
+import hygge.backend.dto.member.request.LogoutRequest;
+import hygge.backend.dto.member.response.LogoutResponse;
 import hygge.backend.dto.request.LoginRequest;
 import hygge.backend.dto.request.SignupRequest;
 import hygge.backend.dto.request.TokenRequest;
@@ -19,6 +21,8 @@ import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.RefreshTokenRepository;
 import hygge.backend.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,9 +33,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static hygge.backend.error.exception.ExceptionInfo.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -40,6 +46,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisTemplate redisTemplate;
 
     private final SchoolRepository schoolRepository;
 
@@ -97,6 +104,7 @@ public class MemberService {
 
     @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
+        log.info("MemberService.login()");
         // 1. Login ID/PW 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginRequest.toAuthentication();
 
@@ -109,12 +117,11 @@ public class MemberService {
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 4. RefreshToken 저장
-        RefreshToken refreshToken = RefreshToken.builder()
-                .key(authentication.getName())
-                .value(tokenDto.getRefreshToken())
-                .build();
+        redisTemplate.opsForValue().set("RT:" + authentication.getName(),
+                                                    tokenDto.getRefreshToken(),
+                                                    tokenDto.getRefreshTokenExpiresIn(),
+                                                    TimeUnit.MILLISECONDS);
 
-        refreshTokenRepository.save(refreshToken);
 
         Member loginMember = memberRepository.findByLoginId(loginRequest.getLoginId())
                 .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
@@ -129,32 +136,23 @@ public class MemberService {
     }
 
     @Transactional
-    public TokenDto reissue(TokenRequest tokenRequest) {
-        // 1. Refresh Token 검증
-        if (!tokenProvider.validateToken(tokenRequest.getRefreshToken())) {
-            throw new BusinessException(INVALID_REFRESH_TOKEN);
+    public LogoutResponse logout(LogoutRequest request){
+        log.info("MemberService.logout()");
+        if (!tokenProvider.validateToken(request.getAccessToken())) {
+            throw new BusinessException(INVALID_ACCESS_TOKEN);
         }
 
-        // 2. Access Token 에서 Member ID 가져오기
-        Authentication authentication = tokenProvider.getAuthentication(tokenRequest.getAccessToken());
+        Authentication authentication = tokenProvider.getAuthentication(request.getAccessToken());
 
-        // 3. 저장소에서 Member ID를 기반으로 Refresh Token 값 가져옴
-        RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new BusinessException(LOGOUT_MEMBER));
-
-        // 4. Refresh Token 일치하는지 검사
-        if (!refreshToken.getValue().equals(tokenRequest.getRefreshToken())) {
-            throw new BusinessException(REFRESH_TOKEN_MATCH_FAIL);
+        if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
+            redisTemplate.delete("RT:" + authentication.getName());
         }
 
-        // 5. 새로운 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        Long expiration = tokenProvider.getExpiration(request.getAccessToken());
+        redisTemplate.opsForValue().set(request.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 
-        // 6. 저장소 정보 업데이트
-        RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
-        refreshTokenRepository.save(newRefreshToken);
-
-        // 토큰 발급
-        return tokenDto;
+        return LogoutResponse.builder()
+                .memberId(authentication.getName())
+                .build();
     }
 }
