@@ -30,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static hygge.backend.error.exception.ExceptionInfo.*;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -44,14 +46,14 @@ public class MemberService {
     @Transactional
     public SignupResponse signup(SignupRequest signupRequest) throws BusinessException {
         if (memberRepository.existsByEmail(signupRequest.getEmail())) {  // 이메일 중복
-            throw new BusinessException("이미 가입된 이메일 입니다.");
+            throw new BusinessException(REGISTERED_EMAIL);
         }
         else if (memberRepository.existsByLoginId(signupRequest.getLoginId())) {  // 로그인 아이디 중복
-            throw new BusinessException("이미 사용중인 아이디 입니다.");
+            throw new BusinessException(REGISTERED_LOGIN_ID);
         }
 
         School school = schoolRepository.findById(signupRequest.getSchoolId())
-                .orElseThrow(()->new BusinessException("등록되지 않은 학교 입니다."));
+                .orElseThrow(()->new BusinessException(UNREGISTERED_SCHOOL));
 
         Member member = Member.builder()
                         .loginId(signupRequest.getLoginId())
@@ -115,7 +117,7 @@ public class MemberService {
         refreshTokenRepository.save(refreshToken);
 
         Member loginMember = memberRepository.findByLoginId(loginRequest.getLoginId())
-                .orElseThrow(() -> new BusinessException("해당하는 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
         // 5. 토큰 발급
         return LoginResponse.builder()
@@ -130,7 +132,7 @@ public class MemberService {
     public TokenDto reissue(TokenRequest tokenRequest) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(tokenRequest.getRefreshToken())) {
-            throw new BusinessException("Refresh Token 이 유효하지 않습니다.");
+            throw new BusinessException(INVALID_REFRESH_TOKEN);
         }
 
         // 2. Access Token 에서 Member ID 가져오기
@@ -138,11 +140,11 @@ public class MemberService {
 
         // 3. 저장소에서 Member ID를 기반으로 Refresh Token 값 가져옴
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new BusinessException("로그아웃 된 사용자입니다."));
+                .orElseThrow(() -> new BusinessException(LOGOUT_MEMBER));
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.getValue().equals(tokenRequest.getRefreshToken())) {
-            throw new BusinessException("토큰의 유저 정보가 일치하지 않습니다.");
+            throw new BusinessException(REFRESH_TOKEN_MATCH_FAIL);
         }
 
         // 5. 새로운 토큰 생성

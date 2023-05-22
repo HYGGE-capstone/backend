@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static hygge.backend.error.exception.ExceptionInfo.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,15 +37,15 @@ public class TeamService {
         log.info("TeamService.createTeam {}", memberId);
 
         Member leader = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
         log.info("memberRepository.findById = {}", leader.getId());
 
         Subject subject = subjectRepository.findById(request.getSubjectId())
-                .orElseThrow(() -> new BusinessException("요청하신 과목이 존재하지 않습니다. "));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_SUBJECT));
         log.info("subjectRepository.findById = {}", subject.getId());
 
-        if (request.getMaxMember() < 2) throw new BusinessException("최대 멤버수가 2보다 작습니다.");
+        if (request.getMaxMember() < 2) throw new BusinessException(MIN_TEAM_MEMBER);
 
         // 유저가 과목에 속한 팀이 이미 있다면 오류 처리
         Long subjectId;
@@ -51,7 +53,7 @@ public class TeamService {
         for (MemberTeam memberTeam : leader.getMemberTeams()) {
             subjectId = memberTeam.getTeam().getSubject().getId();
             if (subjectId == request.getSubjectId()) {
-                throw new BusinessException("이미 선택된 과목에 팀이 있습니다. ");
+                throw new BusinessException(ALREADY_HAVE_TEAM);
             }
         }
 
@@ -101,7 +103,7 @@ public class TeamService {
     @Transactional(readOnly = true)
     public TeamResponse getTeams(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException("해당하는 회원이 존재하지 않습니다"));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
         List<TeamDto> teams = new ArrayList<>();
 
@@ -131,7 +133,7 @@ public class TeamService {
     public TeamResponse searchTeams(Long subjectId) {
 
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new BusinessException("해당하는 과목을 찾을 수 없습니다"));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_SUBJECT));
 
         List<TeamDto> teams = new ArrayList<>();
 
@@ -155,7 +157,7 @@ public class TeamService {
     @Transactional(readOnly = true)
     public GetMembersByTeamResponse getMembersByTeam(Long teamId) {
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new BusinessException("요청하신 팀이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM));
 
         Long leaderId = team.getLeader().getId();
 

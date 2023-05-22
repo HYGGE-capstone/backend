@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static hygge.backend.error.exception.ExceptionInfo.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -37,10 +39,10 @@ public class OfferService {
         log.info("OfferService.getOffers()");
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_MEMBER));
 
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(()-> new BusinessException("요청하신 과목이 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_SUBJECT));
 
         List<Offer> offers = offerRepository.findByMemberId(memberId);
 
@@ -62,18 +64,18 @@ public class OfferService {
     public OfferResponse offer(Long memberId, OfferRequest request) {
         log.info("OfferService.offer()");
         Member leader = memberRepository.findById(memberId)
-                .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_MEMBER));
 
         Member subscriber = memberRepository.findById(request.getSubscriberId())
-                .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_MEMBER));
 
         Team team = teamRepository.findById(request.getTeamId())
-                .orElseThrow(()-> new BusinessException("요청하신 팀이 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_TEAM));
 
-        if(!team.getLeader().getId().equals(leader.getId())) throw new BusinessException("요청할 권한이 없습니다.");
+        if(!team.getLeader().getId().equals(leader.getId())) throw new BusinessException(UNAUTHORIZED_REQUEST);
 
         if (offerRepository.existsByTeamIdAndMemberId(team.getId(), subscriber.getId())) {
-            throw new BusinessException("해당 구독자에게 이미 제안하였습니다.");
+            throw new BusinessException(DUPLICATED_OFFER);
         }
 
         // 해당 과목에 이미 소속된 팀이 있는지 검증
@@ -82,7 +84,7 @@ public class OfferService {
 
         for (Team belongTeam : belongTeams) {
             if(belongTeam.getSubject().getId().equals(team.getSubject().getId()))
-                throw new BusinessException("요청하신 과목에 이미 소속된 팀이 있습니다.");
+                throw new BusinessException(ALREADY_HAVE_TEAM);
         }
 
         Offer offer = Offer.builder()
@@ -99,14 +101,14 @@ public class OfferService {
     public OfferResultDto offerAccept(Long memberId, OfferResultRequestDto request) {
         log.info("OfferService.offerAccept()");
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException("요청하신 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
         Offer offer = offerRepository.findById(request.getOfferId())
-                .orElseThrow(() -> new BusinessException("요청하신 팀 합류 제안을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_OFFER));
         Team team = offer.getTeam();
 
         List<Offer> offers = offerRepository.findByMemberId(memberId);
 
-        if(team.getNumMember() + 1 > team.getMaxMember()) throw new BusinessException("더 이상 팀원을 받을 수 없습니다.");
+        if(team.getNumMember() + 1 > team.getMaxMember()) throw new BusinessException(MAX_TEAM_MEMBER);
 
         MemberTeam memberTeam = MemberTeam.builder().member(member).team(team).build();
         memberTeamRepository.save(memberTeam);
@@ -153,15 +155,15 @@ public class OfferService {
     public OfferResultDto offerReject(Long memberId, OfferResultRequestDto request) {
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException("요청하신 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
         Offer offer = offerRepository.findById(request.getOfferId())
-                .orElseThrow(() -> new BusinessException("요청하신 팀 합류 제안을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_OFFER));
 
         Long teamId = offer.getTeam().getId();
 
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new BusinessException("요청하신 팀을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM));
 
 
         offerRepository.delete(offer);

@@ -1,9 +1,14 @@
 package hygge.backend.error.exception;
 
-public class BusinessException extends RuntimeException {
+import lombok.Getter;
 
-    public BusinessException(String message) {
-        super(message);
+@Getter
+public class BusinessException extends RuntimeException {
+    private String code;
+
+    public BusinessException(ExceptionInfo exceptionInfo) {
+        super(exceptionInfo.getMsg());
+        this.code = exceptionInfo.getCode();
     }
 
 }

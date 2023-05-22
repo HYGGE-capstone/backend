@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static hygge.backend.error.exception.ExceptionInfo.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -40,12 +42,12 @@ public class TeamApplicantService {
     public GetApplicantsResponse getApplicants(Long memberId, Long teamId) {
         log.info("TeamApplicantService.getApplicants");
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_MEMBER));
 
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(()-> new BusinessException("요청하신 팀이 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_TEAM));
 
-        if(member.getId() != team.getLeader().getId()) throw new BusinessException("요청할 권한이 없습니다.");
+        if(member.getId() != team.getLeader().getId()) throw new BusinessException(UNAUTHORIZED_REQUEST);
 
         List<ApplicantDto> applicants = team.getTeamApplicants()
                 .stream().map(teamApplicant -> new ApplicantDto(teamApplicant.getApplicant(), teamApplicant.getId())).collect(Collectors.toList());
@@ -57,13 +59,13 @@ public class TeamApplicantService {
     public ApplyResponse apply(Long memberId, ApplyRequest request) {
         log.info("TeamApplicantService.apply");
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_MEMBER));
 
         Team team = teamRepository.findById(request.getTeamId())
-                .orElseThrow(()-> new BusinessException("요청하신 팀이 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_TEAM));
 
         if (teamApplicantRepository.existsByTeamIdAndApplicantId(team.getId(), member.getId())) {
-            throw new BusinessException("이미 해당 팀에 지원하였습니다.");
+            throw new BusinessException(ALREADY_APPLY);
         }
 
         // 해당 과목에 이미 소속된 팀이 있는지 검증
@@ -71,7 +73,7 @@ public class TeamApplicantService {
 
         for (Team belongTeam : belongTeams) {
             if(belongTeam.getSubject().getId().equals(team.getSubject().getId()))
-                throw new BusinessException("요청하신 과목에 이미 소속된 팀이 있습니다.");
+                throw new BusinessException(ALREADY_HAVE_TEAM);
         }
 
         TeamApplicant teamApplicant = TeamApplicant.builder()
@@ -99,18 +101,18 @@ public class TeamApplicantService {
         log.info("TeamApplicantService.applyAccept");
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_MEMBER));
 
         TeamApplicant teamApplicant = teamApplicantRepository.findById(request.getTeamApplicantId())
-                .orElseThrow(() -> new BusinessException("요청하신 팀 지원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM_APPLICANT));
 
         Team team = teamApplicant.getTeam();
 
         Member applicant = teamApplicant.getApplicant();
 
-        if(!member.getId().equals(team.getLeader().getId())) throw new BusinessException("요청할 권한이 없습니다.");
+        if(!member.getId().equals(team.getLeader().getId())) throw new BusinessException(UNAUTHORIZED_REQUEST);
 
-        if(team.getNumMember() + 1 > team.getMaxMember()) throw new BusinessException("더 이상 팀원을 받을 수 없습니다.");
+        if(team.getNumMember() + 1 > team.getMaxMember()) throw new BusinessException(MAX_TEAM_MEMBER);
 
         MemberTeam memberTeam = MemberTeam.builder().team(team).member(applicant).build();
         memberTeamRepository.save(memberTeam);
@@ -151,16 +153,16 @@ public class TeamApplicantService {
         log.info("TeamApplicantService.applyReject");
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new BusinessException("요청하신 멤버가 존재하지 않습니다."));
+                .orElseThrow(()-> new BusinessException(CANNOT_FIND_MEMBER));
 
         TeamApplicant teamApplicant = teamApplicantRepository.findById(request.getTeamApplicantId())
-                .orElseThrow(() -> new BusinessException("요청하신 팀 지원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM_APPLICANT));
 
         Team team = teamApplicant.getTeam();
 
         Member applicant = teamApplicant.getApplicant();
 
-        if(member.getId() != team.getLeader().getId()) throw new BusinessException("요청할 권한이 없습니다.");
+        if(member.getId() != team.getLeader().getId()) throw new BusinessException(UNAUTHORIZED_REQUEST);
 
         teamApplicantRepository.delete(teamApplicant);
 

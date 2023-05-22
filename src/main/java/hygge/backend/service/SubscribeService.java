@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hygge.backend.error.exception.ExceptionInfo.*;
+
 
 @Slf4j
 @Service
@@ -35,12 +37,12 @@ public class SubscribeService {
     @Transactional
     public SubscribeDto subscribe(SubscribeDto subscribeDto) {
         Member member = memberRepository.findById(subscribeDto.getMemberId())
-                .orElseThrow(() -> new BusinessException("해당하는 회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
         Subject subject = subjectRepository.findById(subscribeDto.getSubjectId())
-                .orElseThrow(() -> new BusinessException("해당하는 과목이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_SUBJECT));
 
         if(subscribeRepository.existsByMemberIdAndSubjectId(member.getId(), subject.getId())){
-            throw new BusinessException("이미 구독한 과목입니다.");
+            throw new BusinessException(ALREADY_SUBSCRIBE);
         }
 
         Subscribe subscribe = Subscribe.builder()
@@ -67,12 +69,12 @@ public class SubscribeService {
     @Transactional
     public SubscribeDto unsubscribe(SubscribeDto subscribeDto) {
         Member member = memberRepository.findById(subscribeDto.getMemberId())
-                .orElseThrow(() -> new BusinessException("해당하는 회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
         Subject subject = subjectRepository.findById(subscribeDto.getSubjectId())
-                .orElseThrow(() -> new BusinessException("해당하는 과목이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_SUBJECT));
 
         Subscribe subscribe = subscribeRepository.findByMemberIdAndSubjectId(member.getId(), subject.getId())
-                .orElseThrow(() -> new BusinessException("구독되지 않은 과목입니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_SUBSCRIBE));
 
         subscribeRepository.delete(subscribe);
 
@@ -83,7 +85,7 @@ public class SubscribeService {
     @Transactional(readOnly = true)
     public SubscribeResponse getSubscribes(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException("해당하는 회원이 존재하지 않습니다"));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
         List<SubjectDto> subjects = new ArrayList<>();
 

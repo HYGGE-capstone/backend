@@ -20,6 +20,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static hygge.backend.error.exception.ExceptionInfo.CANNOT_FIND_MEMBER;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -86,7 +88,7 @@ public class NotificaitonService {
     public void sendNotification(NotificationCase notiCase, NewApplicantNotiDto newApplicantNotiDto){
         log.info("{} NOTIFICATION SEND", notiCase);
         Member leader = memberRepository.findById(newApplicantNotiDto.getLeaderId())
-                .orElseThrow(() -> new BusinessException("해당하는 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
         // - from : 팀 이름
         String from = newApplicantNotiDto.getTeamName();
@@ -111,7 +113,7 @@ public class NotificaitonService {
     public void sendNotification(NotificationCase notiCase, NewOfferResultNotiDto newOfferResultNotiDto) {
         log.info("{} NOTIFICATION SEND", notiCase);
         Member leader = memberRepository.findById(newOfferResultNotiDto.getLeaderId())
-                .orElseThrow(() -> new BusinessException("해당하는 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
         // from : 팀 이름
         String from = newOfferResultNotiDto.getTeamName();
@@ -167,7 +169,7 @@ public class NotificaitonService {
     public void sendNotification(NotificationCase notiCase, NewApplyResultNotiDto newApplyResultNotiDto) {
         log.info("{} NOTIFICATION SEND", notiCase);
         Member member = memberRepository.findById(newApplyResultNotiDto.getApplicantId())
-                .orElseThrow(() -> new BusinessException("요청하신 회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
         String from = newApplyResultNotiDto.getTeamName();
         String content = "";
         if(newApplyResultNotiDto.isAccept()){
@@ -192,7 +194,7 @@ public class NotificaitonService {
     @Transactional
     public NotificationListDto getNotifications(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException("해당하는 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
         List<NotificationDto> notificationDtoList = member.getNotifications()
                 .stream().map(notification -> new NotificationDto(notification)).collect(Collectors.toList());
@@ -211,7 +213,7 @@ public class NotificaitonService {
     @Transactional(readOnly = true)
     public NotiDirtyCheck notiDirtyCheck(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException("요청하신 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
         Comparator<Notification> comparator = new Comparator<Notification>() {
             @Override

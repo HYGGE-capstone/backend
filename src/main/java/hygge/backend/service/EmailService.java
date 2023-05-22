@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
+import static hygge.backend.error.exception.ExceptionInfo.*;
+
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -54,13 +56,13 @@ public class EmailService {
         String emailForm = email.substring(index);
 
         if (index <= 1) { // 0일 경우 @ 없음, 1일 경우 이메일 입력 안함.
-            throw new BusinessException("올바르지 않은 이메일 형식입니다.");
+            throw new BusinessException(INVALID_EMAIL_FORM);
         }
 
         School school = schoolRepository.findByEmailForm(emailForm)
-                .orElseThrow(()-> new BusinessException("등록되지 않은 학교의 이메일 형식입니다."));
+                .orElseThrow(()-> new BusinessException(UNREGISTERED_EMAIL_FORM));
 
-        if(memberRepository.existsByEmail(email)) throw new BusinessException("이미 등록된 이메일 입니다.");
+        if(memberRepository.existsByEmail(email)) throw new BusinessException(REGISTERED_EMAIL);
 
         final String code = createCode();
 
