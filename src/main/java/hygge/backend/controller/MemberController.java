@@ -1,6 +1,7 @@
 package hygge.backend.controller;
 
 import hygge.backend.dto.TokenDto;
+import hygge.backend.dto.member.ReissueDto;
 import hygge.backend.dto.member.request.LogoutRequest;
 import hygge.backend.dto.member.response.LogoutResponse;
 import hygge.backend.dto.request.LoginRequest;
@@ -93,6 +94,19 @@ public class MemberController {
     @PostMapping("/logout")
     public ResponseEntity<LogoutResponse> logout(@RequestBody LogoutRequest request) {
         return ResponseEntity.ok(memberService.logout(request));
+    }
+
+    @Operation(summary = "토큰 재발급 메서드", description = "토큰 재발급 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "토큰 재발급 성공",
+                    content = @Content(schema = @Schema(implementation = TokenDto.class))),
+            @ApiResponse(responseCode = "400", description = "토큰 재발급 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
+    @PostMapping("/reissue")
+    public ResponseEntity<TokenDto> reissue(@RequestBody ReissueDto request) {
+        return ResponseEntity.ok(memberService.reissue(request));
     }
 
     // 아이디 찾기 메서드

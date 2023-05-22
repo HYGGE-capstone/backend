@@ -2,20 +2,17 @@ package hygge.backend.service;
 
 import hygge.backend.dto.TokenDto;
 import hygge.backend.dto.member.request.LogoutRequest;
+import hygge.backend.dto.member.ReissueDto;
 import hygge.backend.dto.member.response.LogoutResponse;
 import hygge.backend.dto.request.LoginRequest;
 import hygge.backend.dto.request.SignupRequest;
-import hygge.backend.dto.request.TokenRequest;
-import hygge.backend.dto.response.EmailResponse;
 import hygge.backend.dto.response.LoginIdResponse;
 import hygge.backend.dto.response.LoginResponse;
 import hygge.backend.dto.response.SignupResponse;
 import hygge.backend.entity.Member;
-import hygge.backend.entity.RefreshToken;
 import hygge.backend.entity.Role;
 import hygge.backend.entity.School;
 import hygge.backend.error.exception.BusinessException;
-import hygge.backend.error.exception.DuplicateException;
 import hygge.backend.jwt.TokenProvider;
 import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.RefreshTokenRepository;
@@ -31,6 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -132,6 +130,8 @@ public class MemberService {
                 .refreshToken(tokenDto.getRefreshToken())
                 .loginId(loginMember.getLoginId())
                 .nickname(loginMember.getNickname())
+                .accessTokenExpiresIn(tokenDto.getAccessTokenExpiresIn())
+                .refreshTokenExpiresIn(tokenDto.getRefreshTokenExpiresIn())
                 .build();
     }
 
@@ -154,5 +154,33 @@ public class MemberService {
         return LogoutResponse.builder()
                 .memberId(authentication.getName())
                 .build();
+    }
+
+    @Transactional
+    public TokenDto reissue(ReissueDto request) {
+        log.info("MemberService.reissue()");
+        // 1. 리프레쉬 토큰 검증
+        if(!tokenProvider.validateToken(request.getRefreshToken()))
+            throw new BusinessException(INVALID_REFRESH_TOKEN);
+
+        // 2. 액세스 토큰에서 정보 추출
+        Authentication authentication = tokenProvider.getAuthentication(request.getAccessToken());
+
+        // 3. Redis 에서 Refresh Token 가져옴
+        String refreshToken = (String) redisTemplate.opsForValue().get("RT:" + authentication.getName());
+
+        if(ObjectUtils.isEmpty(refreshToken) || !refreshToken.equals(request.getRefreshToken()))
+            throw new BusinessException(INVALID_REFRESH_TOKEN);
+
+        // 4. 새 토큰 발급
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+
+        // 5. 리프레쉬 토큰 Redis 에 저장
+        redisTemplate.opsForValue().set("RT:" + authentication.getName(),
+                tokenDto.getRefreshToken(),
+                tokenDto.getRefreshTokenExpiresIn(),
+                TimeUnit.MILLISECONDS);
+
+        return tokenDto;
     }
 }

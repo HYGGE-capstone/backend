@@ -22,4 +22,9 @@ public class LoginResponse {
 
     @Schema(description = "닉네임", defaultValue = "테스터")
     private String nickname;
+
+    private Long accessTokenExpiresIn;
+
+    private Long refreshTokenExpiresIn;
+
 }

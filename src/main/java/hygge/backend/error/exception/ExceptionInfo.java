@@ -17,7 +17,7 @@ public enum ExceptionInfo {
 
     // 로그인/로그아웃
     INVALID_REFRESH_TOKEN("LG-000", "유효하지 않은 리프레쉬 토큰입니다."),
-    INVALID_ACCESS_TOKEN("LG-001", "유요하지 않은 액세스 토큰입니다."),
+    INVALID_ACCESS_TOKEN("LG-001", "유효하지 않은 액세스 토큰입니다."),
     LOGOUT_MEMBER("LG-002", "로그아웃 된 회원입니다."),
     REFRESH_TOKEN_MATCH_FAIL("LG-003", "리프레쉬 토큰과 유저 정보가 일치하지 않습니다."),
 
