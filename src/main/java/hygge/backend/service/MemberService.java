@@ -138,6 +138,7 @@ public class MemberService {
     @Transactional
     public LogoutResponse logout(LogoutRequest request){
         log.info("MemberService.logout()");
+
         if (!tokenProvider.validateToken(request.getAccessToken())) {
             throw new BusinessException(INVALID_ACCESS_TOKEN);
         }
