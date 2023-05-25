@@ -18,7 +18,6 @@ public class MessageRoom {
     @Id @GeneratedValue
     @Column(name = "MESSAGE_ROOM_ID") private Long id;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MESSAGE_ROOM_FROM_ID")
     private Member from;

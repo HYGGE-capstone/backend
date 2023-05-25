@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageDto {
+    private Long messageId;
     private Long fromId;
     private Long toId;
     private String content;
@@ -21,6 +22,7 @@ public class MessageDto {
     private boolean isOpened;
 
     public MessageDto(Message message) {
+        this.messageId = message.getId();
         this.fromId = message.getFrom().getId();
         this.toId = message.getTo().getId();
         this.content = message.getContent();

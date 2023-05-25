@@ -1,6 +1,7 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.message.MessageDto;
+import hygge.backend.dto.message.MessageRoomDto;
 import hygge.backend.dto.message.SendMessageRequest;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Message;
@@ -14,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -63,5 +67,31 @@ public class MessageService {
         messageRepository.save(toMessage);
 
         return new MessageDto(fromMessage);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MessageRoomDto> getMessageRoom(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
+
+        List<MessageRoomDto> messageRoomDtos = messageRoomRepository.findByFrom(member)
+                .stream().map(messageRoom -> new MessageRoomDto(messageRoom)).collect(Collectors.toList());
+
+        return messageRoomDtos;
+    }
+
+    @Transactional(readOnly = true)
+    public List<MessageDto> getMessages(Long memberId, Long roomId) {
+        MessageRoom messageRoom = messageRoomRepository.findById(roomId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MESSAGE_ROOM));
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
+
+        if(!messageRoom.getFrom().getId().equals(member.getId()))
+            throw new BusinessException(ExceptionInfo.UNAUTHORIZED_REQUEST);
+
+        return messageRoom.getMessages()
+                .stream().map(message -> new MessageDto(message)).collect(Collectors.toList());
     }
 }
