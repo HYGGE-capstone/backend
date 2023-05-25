@@ -32,6 +32,10 @@ public class Message {
     @JoinColumn(name = "MESSAGE_TO")
     private Member to;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MESSAGE_ROOM_ID")
+    private MessageRoom messageRoom;
+
     @CreatedDate
     private LocalDateTime createdTime;
 
@@ -43,10 +47,11 @@ public class Message {
     }
 
     @Builder
-    public Message(Member from, String content, Member to, boolean isOpened) {
+    public Message(Member from, String content, Member to, boolean isOpened, MessageRoom messageRoom) {
         this.from = from;
         this.content = content;
         this.to = to;
+        this.messageRoom = messageRoom;
         this.isOpened = isOpened;
     }
 }
