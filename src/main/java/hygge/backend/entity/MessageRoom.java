@@ -33,9 +33,26 @@ public class MessageRoom {
     @JsonIgnore
     private LocalDateTime lastOpenTime;
 
+    private LocalDateTime lastUpdateTime;
+    private boolean isDirty;
+
     @Builder
-    public MessageRoom(Member from, Member to) {
+    public MessageRoom(Member from, Member to, boolean isDirty) {
         this.from = from;
         this.to = to;
+        this.isDirty = isDirty;
+    }
+
+    // ------
+    public void updateTime() {
+        this.lastUpdateTime = LocalDateTime.now();
+    }
+
+    public void open(){
+        this.lastOpenTime = LocalDateTime.now();
+    }
+
+    public void setDirty(boolean dirty) {
+        this.isDirty = dirty;
     }
 }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -17,11 +19,13 @@ public class MessageRoomDto {
     private String toNickname;
 
     private boolean isDirty;
+    private LocalDateTime lastUpdateTime;
 
     public MessageRoomDto(MessageRoom messageRoom) {
         this.messageRoomId = messageRoom.getId();
         this.toId = messageRoom.getTo().getId();
         this.toLoginId = messageRoom.getTo().getLoginId();
         this.toNickname = messageRoom.getTo().getNickname();
+        this.lastUpdateTime = messageRoom.getLastUpdateTime();
     }
 }

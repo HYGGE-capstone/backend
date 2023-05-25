@@ -1,9 +1,6 @@
 package hygge.backend.service;
 
-import hygge.backend.dto.message.DeleteMessageRoomDto;
-import hygge.backend.dto.message.MessageDto;
-import hygge.backend.dto.message.MessageRoomDto;
-import hygge.backend.dto.message.SendMessageRequest;
+import hygge.backend.dto.message.*;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Message;
 import hygge.backend.entity.MessageRoom;
@@ -39,10 +36,14 @@ public class MessageService {
                 .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
 
         MessageRoom fromMessageRoom = messageRoomRepository.findByFromAndTo(from, to)
-                .orElseGet(() -> new MessageRoom(from, to));
+                .orElseGet(() -> new MessageRoom(from, to, false));
 
         MessageRoom toMessageRoom = messageRoomRepository.findByFromAndTo(to, from)
-                .orElseGet(() -> new MessageRoom(to, from));
+                .orElseGet(() -> new MessageRoom(to, from, true));
+
+        fromMessageRoom.updateTime();
+        toMessageRoom.updateTime();
+        fromMessageRoom.open();
 
         MessageRoom savedFromMessageRoom = messageRoomRepository.save(fromMessageRoom);
         MessageRoom savedToMessageRoom = messageRoomRepository.save(toMessageRoom);
@@ -53,7 +54,7 @@ public class MessageService {
                 .to(to)
                 .content(request.getContent())
                 .messageRoom(savedFromMessageRoom)
-                .isOpened(false)
+                .isOpened(true)
                 .build();
 
         Message toMessage = Message.builder()
@@ -75,13 +76,26 @@ public class MessageService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
 
+        for (MessageRoom messageRoom : messageRoomRepository.findByFrom(member)) {
+            if (messageRoom.getLastOpenTime() == null) {
+                messageRoom.setDirty(true);
+            }else{
+                if (messageRoom.getLastOpenTime().isAfter(messageRoom.getLastUpdateTime())) {
+                    messageRoom.setDirty(false);
+                }else{
+                    messageRoom.setDirty(true);
+                }
+            }
+            messageRoomRepository.save(messageRoom);
+        }
+
         List<MessageRoomDto> messageRoomDtos = messageRoomRepository.findByFrom(member)
                 .stream().map(messageRoom -> new MessageRoomDto(messageRoom)).collect(Collectors.toList());
 
         return messageRoomDtos;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<MessageDto> getMessages(Long memberId, Long roomId) {
         MessageRoom messageRoom = messageRoomRepository.findById(roomId)
                 .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MESSAGE_ROOM));
@@ -91,6 +105,14 @@ public class MessageService {
 
         if(!messageRoom.getFrom().getId().equals(member.getId()))
             throw new BusinessException(ExceptionInfo.UNAUTHORIZED_REQUEST);
+
+        messageRoom.open();
+        messageRoomRepository.save(messageRoom);
+
+        for (Message message : messageRoom.getMessages()) {
+            message.open();
+            messageRepository.save(message);
+        }
 
         return messageRoom.getMessages()
                 .stream().map(message -> new MessageDto(message)).collect(Collectors.toList());
@@ -108,7 +130,24 @@ public class MessageService {
             throw new BusinessException(ExceptionInfo.UNAUTHORIZED_REQUEST);
 
         messageRoomRepository.delete(messageRoom);
-        
+
         return new DeleteMessageRoomDto(messageRoom.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public MessageDirtyCheck checkTotalDirty(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
+
+        List<MessageRoom> messageRooms = messageRoomRepository.findByFrom(member);
+        MessageDirtyCheck messageDirtyCheck = new MessageDirtyCheck(false);
+
+        for (MessageRoom messageRoom : messageRooms) {
+            if(messageRoom.isDirty()) {
+                messageDirtyCheck.setDirty(true);
+                break;
+            }
+        }
+        return messageDirtyCheck;
     }
 }

@@ -1,9 +1,6 @@
 package hygge.backend.controller;
 
-import hygge.backend.dto.message.DeleteMessageRoomDto;
-import hygge.backend.dto.message.MessageDto;
-import hygge.backend.dto.message.MessageRoomDto;
-import hygge.backend.dto.message.SendMessageRequest;
+import hygge.backend.dto.message.*;
 import hygge.backend.entity.MessageRoom;
 import hygge.backend.service.MessageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,4 +46,11 @@ public class MessageController {
         return messageService.deleteMessageRoom(memberId, roomId);
     }
 
+
+    // 메인 화면에서 변경감지
+    @GetMapping("/check/total")
+    public MessageDirtyCheck checkTotalDirty(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        return messageService.checkTotalDirty(memberId);
+    }
 }
