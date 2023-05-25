@@ -27,7 +27,7 @@ public class MessageRoom {
     @JoinColumn(name = "MESSAGE_ROOM_TO_ID")
     private Member to;
 
-    @OneToMany(mappedBy = "messageRoom")
+    @OneToMany(mappedBy = "messageRoom", cascade = CascadeType.ALL)
     private List<Message> messages = new ArrayList<>();
 
     @JsonIgnore

@@ -1,5 +1,6 @@
 package hygge.backend.controller;
 
+import hygge.backend.dto.message.DeleteMessageRoomDto;
 import hygge.backend.dto.message.MessageDto;
 import hygge.backend.dto.message.MessageRoomDto;
 import hygge.backend.dto.message.SendMessageRequest;
@@ -39,6 +40,13 @@ public class MessageController {
     public List<MessageDto> getMessages(Principal principal, @PathVariable Long roomId) {
         Long memberId = Long.parseLong(principal.getName());
         return messageService.getMessages(memberId, roomId);
+    }
+
+    // 쪽지함 삭제
+    @DeleteMapping("/room/{roomId}")
+    public DeleteMessageRoomDto deleteMessageRoom(Principal principal, @PathVariable Long roomId) {
+        Long memberId = Long.parseLong(principal.getName());
+        return messageService.deleteMessageRoom(memberId, roomId);
     }
 
 }

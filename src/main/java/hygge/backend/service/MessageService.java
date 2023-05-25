@@ -1,5 +1,6 @@
 package hygge.backend.service;
 
+import hygge.backend.dto.message.DeleteMessageRoomDto;
 import hygge.backend.dto.message.MessageDto;
 import hygge.backend.dto.message.MessageRoomDto;
 import hygge.backend.dto.message.SendMessageRequest;
@@ -93,5 +94,21 @@ public class MessageService {
 
         return messageRoom.getMessages()
                 .stream().map(message -> new MessageDto(message)).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public DeleteMessageRoomDto deleteMessageRoom(Long memberId, Long roomId) {
+        MessageRoom messageRoom = messageRoomRepository.findById(roomId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MESSAGE_ROOM));
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
+
+        if(!messageRoom.getFrom().getId().equals(member.getId()))
+            throw new BusinessException(ExceptionInfo.UNAUTHORIZED_REQUEST);
+
+        messageRoomRepository.delete(messageRoom);
+        
+        return new DeleteMessageRoomDto(messageRoom.getId());
     }
 }

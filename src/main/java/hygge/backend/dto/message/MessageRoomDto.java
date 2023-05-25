@@ -15,6 +15,7 @@ public class MessageRoomDto {
     private Long toId;
     private String toLoginId;
     private String toNickname;
+
     private boolean isDirty;
 
     public MessageRoomDto(MessageRoom messageRoom) {
