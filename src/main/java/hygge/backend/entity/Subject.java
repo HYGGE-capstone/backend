@@ -32,6 +32,10 @@ public class Subject {
 
     private String time;  // 수업시간 ex) 월A 수B
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SCHOOL_ID")
+    private School school;
+
     @OneToMany(mappedBy = "subject")
     private List<Team> teams = new ArrayList<>();
 
