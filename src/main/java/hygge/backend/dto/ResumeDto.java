@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResumeDto {
+
+    @Schema(description = "이력서 아이디", defaultValue = "1")
+    private Long resumeId;
     @Schema(description = "회원 아이디", defaultValue = "1")
     @JsonIgnore
     private Long memberId;
@@ -26,6 +29,7 @@ public class ResumeDto {
     private Long subjectId;
 
     public ResumeDto(Resume resume) {
+        this.resumeId = resume.getId();
         this.memberId = resume.getMember().getId();
         this.content = resume.getContent();
         this.title = resume.getTitle();

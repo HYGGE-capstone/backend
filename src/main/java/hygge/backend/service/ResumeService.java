@@ -52,4 +52,20 @@ public class ResumeService {
 
         return new ResumeDto(resume);
     }
+
+    @Transactional
+    public ResumeDto fixResume(Long memberId, ResumeDto resumeDto) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+        Resume resume = resumeRepository.findById(resumeDto.getResumeId())
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_RESUME));
+
+        if(!resume.getMember().getId().equals(member.getId())) throw new BusinessException(UNAUTHORIZED_REQUEST);
+
+        resume.changeTitle(resumeDto.getTitle());
+        resume.changeContent(resumeDto.getContent());
+
+        Resume savedResume = resumeRepository.save(resume);
+        return new ResumeDto(savedResume);
+    }
 }

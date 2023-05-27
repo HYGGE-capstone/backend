@@ -3,6 +3,7 @@ package hygge.backend.controller;
 import hygge.backend.dto.ResumeDto;
 import hygge.backend.dto.response.ErrorResponse;
 import hygge.backend.dto.response.SignupResponse;
+import hygge.backend.entity.Resume;
 import hygge.backend.service.ResumeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,5 +53,19 @@ public class ResumeController {
     public ResponseEntity<ResumeDto> getResumeBySubjectAndMember(@PathVariable Long subjectId, @PathVariable Long memberId) {
         ResumeDto response = resumeService.getResumeBySubjectAndMember(subjectId, memberId);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "이력서 수정 메서드", description = "이력서 수정 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이력서 수정 성공",
+                    content = @Content(schema = @Schema(implementation = ResumeDto.class))),
+            @ApiResponse(responseCode = "400", description = "이력서 수정 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
+    @PutMapping
+    public ResumeDto fixResume(Principal principal, @RequestBody ResumeDto request) {
+        Long memberId = Long.parseLong(principal.getName());
+        return resumeService.fixResume(memberId, request);
     }
 }

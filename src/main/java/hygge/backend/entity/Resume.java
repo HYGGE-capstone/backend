@@ -39,4 +39,13 @@ public class Resume {
         this.title = title;
         this.subject = subject;
     }
+
+    //---
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }
