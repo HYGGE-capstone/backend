@@ -28,4 +28,10 @@ public class AdminSchoolController {
     public SchoolDto postSchool(@RequestBody SchoolNoIdDto request) {
         return schoolService.postSchool(request);
     }
+
+    // 학교 정보 수정
+    @PutMapping
+    public SchoolDto fixSchool(@RequestBody SchoolDto request) {
+        return schoolService.fixSchool(request);
+    }
 }

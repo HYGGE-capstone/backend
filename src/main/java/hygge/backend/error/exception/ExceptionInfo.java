@@ -15,6 +15,7 @@ public enum ExceptionInfo {
     CANNOT_FIND_SUBSCRIBE("CF-006", "요청하신 구독 정보를 찾을 수 없습니다."),
     CANNOT_FIND_TEAM_APPLICANT("CF-007", "요청하신 팀 지원 정보를 찾을 수 없습니다."),
     CANNOT_FIND_MESSAGE_ROOM("CF-008", "요청하신 쪽지함을 찾을 수 없습니다."),
+    CANNOT_FIND_SCHOOL("CF-009", "요청하신 학교를 찾을 수 없습니다."),
 
     // 로그인/로그아웃
     INVALID_REFRESH_TOKEN("LG-000", "유효하지 않은 리프레쉬 토큰입니다."),

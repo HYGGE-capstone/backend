@@ -33,4 +33,13 @@ public class School {
         this.schoolName = schoolName;
         this.emailForm = emailForm;
     }
+
+    //--
+    public void changeSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public void changeEmailForm(String emailForm) {
+        this.emailForm = emailForm;
+    }
 }
