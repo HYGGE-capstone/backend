@@ -1,6 +1,7 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.TokenDto;
+import hygge.backend.dto.member.MemberDto;
 import hygge.backend.dto.member.request.LogoutRequest;
 import hygge.backend.dto.member.ReissueDto;
 import hygge.backend.dto.member.response.LogoutResponse;
@@ -30,8 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static hygge.backend.error.exception.ExceptionInfo.*;
 
@@ -43,7 +46,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final RedisTemplate redisTemplate;
 
     private final SchoolRepository schoolRepository;
@@ -183,5 +185,14 @@ public class MemberService {
                 TimeUnit.MILLISECONDS);
 
         return tokenDto;
+    }
+
+    @Transactional(readOnly = true)
+    public List<MemberDto> getMembersBySchoolId(Long schoolId) {
+        School school = schoolRepository.findById(schoolId)
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_SCHOOL));
+
+        return memberRepository.findBySchool(school)
+                .stream().map(member -> new MemberDto(member)).collect(Collectors.toList());
     }
 }
