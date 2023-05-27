@@ -1,6 +1,8 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.school.SchoolDto;
+import hygge.backend.dto.school.SchoolNoIdDto;
+import hygge.backend.entity.School;
 import hygge.backend.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,5 +20,16 @@ public class SchoolService {
     public List<SchoolDto> getSchools() {
         return schoolRepository.findAll()
                 .stream().map(school -> new SchoolDto(school)).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public SchoolDto postSchool(SchoolNoIdDto schoolNoIdDto) {
+        School school = School.builder()
+                .schoolName(schoolNoIdDto.getSchoolName())
+                .emailForm(schoolNoIdDto.getSchoolEmailForm())
+                .build();
+
+        School savedSchool = schoolRepository.save(school);
+        return new SchoolDto(savedSchool);
     }
 }

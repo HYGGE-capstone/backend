@@ -1,12 +1,11 @@
 package hygge.backend.admin.controller;
 
 import hygge.backend.dto.school.SchoolDto;
+import hygge.backend.dto.school.SchoolNoIdDto;
 import hygge.backend.service.SchoolService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +21,11 @@ public class AdminSchoolController {
     @GetMapping
     public List<SchoolDto> getSchools() {
         return schoolService.getSchools();
+    }
+
+    // 학교 추가
+    @PostMapping
+    public SchoolDto postSchool(@RequestBody SchoolNoIdDto request) {
+        return schoolService.postSchool(request);
     }
 }

@@ -1,6 +1,7 @@
 package hygge.backend.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,11 @@ public class School {
 
     @OneToMany(mappedBy = "school")
     private List<Member> members = new ArrayList<>();
+
+    @Builder
+    public School(Long id, String schoolName, String emailForm) {
+        this.id = id;
+        this.schoolName = schoolName;
+        this.emailForm = emailForm;
+    }
 }
