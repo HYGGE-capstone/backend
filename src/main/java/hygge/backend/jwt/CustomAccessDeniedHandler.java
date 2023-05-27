@@ -1,5 +1,7 @@
 package hygge.backend.jwt;
 
+import hygge.backend.error.exception.BusinessException;
+import hygge.backend.error.exception.ExceptionInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

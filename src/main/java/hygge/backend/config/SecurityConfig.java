@@ -50,7 +50,8 @@ public class SecurityConfig {
 
                 .authorizeRequests()
                 // 요청 허용 설정
-                .antMatchers(HttpMethod.OPTIONS,"/api/v1/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
 
                 // 그 외 모든 요청 허용
                 .anyRequest().permitAll()
