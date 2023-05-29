@@ -2,9 +2,9 @@ package hygge.backend.service;
 
 import hygge.backend.dto.jwt.TokenDto;
 import hygge.backend.dto.member.MemberDto;
-import hygge.backend.dto.member.request.LogoutRequest;
+import hygge.backend.dto.member.LogoutRequest;
 import hygge.backend.dto.member.ReissueDto;
-import hygge.backend.dto.member.response.LogoutResponse;
+import hygge.backend.dto.member.LogoutResponse;
 import hygge.backend.dto.member.LoginRequest;
 import hygge.backend.dto.member.SignupRequest;
 import hygge.backend.dto.member.LoginIdResponse;
