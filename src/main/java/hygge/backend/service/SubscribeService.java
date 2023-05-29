@@ -1,9 +1,9 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.subject.SubjectDto;
-import hygge.backend.dto.SubscribeDto;
+import hygge.backend.dto.subscribe.SubscribeDto;
 import hygge.backend.dto.notification.NewSubscriberNotiDto;
-import hygge.backend.dto.response.subscribe.SubscribeResponse;
+import hygge.backend.dto.subscribe.SubscribeResponse;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.NotificationCase;
 import hygge.backend.entity.Subject;

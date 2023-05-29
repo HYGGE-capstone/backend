@@ -1,8 +1,7 @@
 package hygge.backend.controller;
 
-import hygge.backend.dto.ResumeDto;
-import hygge.backend.dto.response.ErrorResponse;
-import hygge.backend.dto.response.subject.SearchSubjectResponse;
+import hygge.backend.dto.error.ErrorResponse;
+import hygge.backend.dto.subject.SearchSubjectResponse;
 import hygge.backend.service.SubjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

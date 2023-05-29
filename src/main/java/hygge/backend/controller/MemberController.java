@@ -1,12 +1,10 @@
 package hygge.backend.controller;
 
-import hygge.backend.dto.TokenDto;
-import hygge.backend.dto.member.ReissueDto;
+import hygge.backend.dto.error.ErrorResponse;
+import hygge.backend.dto.jwt.TokenDto;
+import hygge.backend.dto.member.*;
 import hygge.backend.dto.member.request.LogoutRequest;
 import hygge.backend.dto.member.response.LogoutResponse;
-import hygge.backend.dto.request.LoginRequest;
-import hygge.backend.dto.request.SignupRequest;
-import hygge.backend.dto.response.*;
 import hygge.backend.service.EmailService;
 import hygge.backend.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;

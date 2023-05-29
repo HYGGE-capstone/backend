@@ -1,6 +1,6 @@
 package hygge.backend.error;
 
-import hygge.backend.dto.response.ErrorResponse;
+import hygge.backend.dto.error.ErrorResponse;
 import hygge.backend.error.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

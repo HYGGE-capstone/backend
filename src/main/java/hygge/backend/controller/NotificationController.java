@@ -1,7 +1,7 @@
 package hygge.backend.controller;
 
-import hygge.backend.dto.response.notification.NotiDirtyCheck;
-import hygge.backend.dto.response.notification.NotificationListDto;
+import hygge.backend.dto.notification.NotiDirtyCheck;
+import hygge.backend.dto.notification.NotificationListDto;
 import hygge.backend.service.NotificaitonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

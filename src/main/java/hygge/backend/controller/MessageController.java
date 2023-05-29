@@ -1,9 +1,7 @@
 package hygge.backend.controller;
 
 import hygge.backend.dto.message.*;
-import hygge.backend.dto.response.ErrorResponse;
-import hygge.backend.dto.response.SignupResponse;
-import hygge.backend.entity.MessageRoom;
+import hygge.backend.dto.error.ErrorResponse;
 import hygge.backend.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

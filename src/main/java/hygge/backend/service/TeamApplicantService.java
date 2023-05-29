@@ -1,15 +1,14 @@
 package hygge.backend.service;
 
-import hygge.backend.dto.ApplicantDto;
-import hygge.backend.dto.ApplyResultDto;
+import hygge.backend.dto.apply.ApplicantDto;
+import hygge.backend.dto.apply.ApplyResultDto;
 import hygge.backend.dto.notification.NewApplicantNotiDto;
 import hygge.backend.dto.notification.NewApplyResultNotiDto;
-import hygge.backend.dto.notification.NewOfferResultNotiDto;
 import hygge.backend.dto.notification.NewTeamMemberNotiDto;
-import hygge.backend.dto.request.teamapplicant.ApplyRequest;
-import hygge.backend.dto.request.teamapplicant.ApplyResultRequestDto;
-import hygge.backend.dto.response.teamapplicant.ApplyResponse;
-import hygge.backend.dto.response.teamapplicant.GetApplicantsResponse;
+import hygge.backend.dto.apply.ApplyRequest;
+import hygge.backend.dto.apply.ApplyResultRequestDto;
+import hygge.backend.dto.apply.ApplyResponse;
+import hygge.backend.dto.apply.GetApplicantsResponse;
 import hygge.backend.entity.*;
 import hygge.backend.error.exception.BusinessException;
 import hygge.backend.repository.MemberRepository;

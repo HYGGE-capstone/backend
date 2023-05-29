@@ -1,7 +1,7 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.subject.SubjectDto;
-import hygge.backend.dto.response.subject.SearchSubjectResponse;
+import hygge.backend.dto.subject.SearchSubjectResponse;
 import hygge.backend.dto.subject.SubjectNoIdDto;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.School;

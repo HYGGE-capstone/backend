@@ -1,13 +1,11 @@
 package hygge.backend.admin.controller;
 
-import hygge.backend.dto.response.team.TeamResponse;
+import hygge.backend.dto.team.TeamResponse;
 import hygge.backend.dto.team.TeamDto;
 import hygge.backend.service.TeamService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "0 관리자 - 팀", description = "팀(관리자) 관련 API 입니다.")
 @RestController

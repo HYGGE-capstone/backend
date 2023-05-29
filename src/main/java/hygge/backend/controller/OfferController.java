@@ -1,11 +1,11 @@
 package hygge.backend.controller;
 
 import hygge.backend.dto.offer.OfferResultDto;
-import hygge.backend.dto.request.offer.OfferRequest;
-import hygge.backend.dto.request.offer.OfferResultRequestDto;
-import hygge.backend.dto.response.ErrorResponse;
-import hygge.backend.dto.response.offer.GetOffersResponse;
-import hygge.backend.dto.response.offer.OfferResponse;
+import hygge.backend.dto.offer.OfferRequest;
+import hygge.backend.dto.offer.OfferResultRequestDto;
+import hygge.backend.dto.error.ErrorResponse;
+import hygge.backend.dto.offer.GetOffersResponse;
+import hygge.backend.dto.offer.OfferResponse;
 import hygge.backend.service.OfferService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

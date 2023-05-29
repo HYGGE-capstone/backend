@@ -1,13 +1,12 @@
 package hygge.backend.service;
 
-import hygge.backend.dto.NotificationDto;
+import hygge.backend.dto.notification.NotificationDto;
 import hygge.backend.dto.notification.*;
-import hygge.backend.dto.response.notification.NotiDirtyCheck;
-import hygge.backend.dto.response.notification.NotificationListDto;
+import hygge.backend.dto.notification.NotiDirtyCheck;
+import hygge.backend.dto.notification.NotificationListDto;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Notification;
 import hygge.backend.entity.NotificationCase;
-import hygge.backend.entity.Team;
 import hygge.backend.error.exception.BusinessException;
 import hygge.backend.repository.*;
 import lombok.RequiredArgsConstructor;

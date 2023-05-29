@@ -1,6 +1,6 @@
 package hygge.backend.service;
 
-import hygge.backend.dto.ResumeDto;
+import hygge.backend.dto.resume.ResumeDto;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Resume;
 import hygge.backend.entity.Subject;

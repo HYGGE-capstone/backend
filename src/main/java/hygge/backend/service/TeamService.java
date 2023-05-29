@@ -1,9 +1,7 @@
 package hygge.backend.service;
 
-import hygge.backend.dto.team.TeamDto;
+import hygge.backend.dto.team.*;
 import hygge.backend.dto.notification.NewTeamNotiDto;
-import hygge.backend.dto.request.team.CreateTeamRequest;
-import hygge.backend.dto.response.team.*;
 import hygge.backend.entity.*;
 import hygge.backend.error.exception.BusinessException;
 import hygge.backend.repository.*;

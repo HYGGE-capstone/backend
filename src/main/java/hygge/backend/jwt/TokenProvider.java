@@ -1,6 +1,6 @@
 package hygge.backend.jwt;
 
-import hygge.backend.dto.TokenDto;
+import hygge.backend.dto.jwt.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

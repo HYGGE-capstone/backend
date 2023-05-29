@@ -1,12 +1,11 @@
 package hygge.backend.controller;
 
-import hygge.backend.dto.SubscribeDto;
-import hygge.backend.dto.request.team.CreateTeamRequest;
-import hygge.backend.dto.response.ErrorResponse;
-import hygge.backend.dto.response.team.CreateTeamResponse;
-import hygge.backend.dto.response.team.GetMembersByTeamResponse;
-import hygge.backend.dto.response.team.GetSubscribersNotBelongTeamResponse;
-import hygge.backend.dto.response.team.TeamResponse;
+import hygge.backend.dto.team.CreateTeamRequest;
+import hygge.backend.dto.error.ErrorResponse;
+import hygge.backend.dto.team.CreateTeamResponse;
+import hygge.backend.dto.team.GetMembersByTeamResponse;
+import hygge.backend.dto.team.GetSubscribersNotBelongTeamResponse;
+import hygge.backend.dto.team.TeamResponse;
 import hygge.backend.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

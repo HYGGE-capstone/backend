@@ -1,12 +1,11 @@
 package hygge.backend.controller;
 
-import hygge.backend.dto.ApplyResultDto;
-import hygge.backend.dto.request.teamapplicant.ApplyRequest;
-import hygge.backend.dto.request.teamapplicant.ApplyResultRequestDto;
-import hygge.backend.dto.response.ErrorResponse;
-import hygge.backend.dto.response.SignupResponse;
-import hygge.backend.dto.response.teamapplicant.ApplyResponse;
-import hygge.backend.dto.response.teamapplicant.GetApplicantsResponse;
+import hygge.backend.dto.apply.ApplyResultDto;
+import hygge.backend.dto.apply.ApplyRequest;
+import hygge.backend.dto.apply.ApplyResultRequestDto;
+import hygge.backend.dto.error.ErrorResponse;
+import hygge.backend.dto.apply.ApplyResponse;
+import hygge.backend.dto.apply.GetApplicantsResponse;
 import hygge.backend.service.TeamApplicantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
