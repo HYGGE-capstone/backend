@@ -56,5 +56,8 @@ public class TeamDto {
         this.numMember = team.getNumMember();
         this.leaderId = team.getLeader().getId();
         this.isLeader = isLeader;
+        this.subjectCode = team.getSubject().getCode();
+        this.subjectId = team.getSubject().getId();
+        this.subjectName = team.getSubject().getName();
     }
 }

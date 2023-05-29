@@ -2,7 +2,9 @@ package hygge.backend.service;
 
 import hygge.backend.dto.subject.SubjectDto;
 import hygge.backend.dto.response.subject.SearchSubjectResponse;
+import hygge.backend.dto.subject.SubjectNoIdDto;
 import hygge.backend.entity.School;
+import hygge.backend.entity.Subject;
 import hygge.backend.error.exception.BusinessException;
 import hygge.backend.error.exception.ExceptionInfo;
 import hygge.backend.repository.SchoolRepository;
@@ -31,5 +33,15 @@ public class SubjectService {
 
         return subjectRepository.findBySchool(school)
                 .stream().map(subject -> new SubjectDto(subject)).collect(Collectors.toList());
+    }
+
+    public SubjectDto enrollSubject(SubjectNoIdDto subjectNoIdDto) {
+        School school = schoolRepository.findById(subjectNoIdDto.getSchoolId())
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_SCHOOL));
+        Subject newSubject = subjectNoIdDto.toEntity(school);
+        Subject savedSubject = subjectRepository.save(newSubject);
+
+        return new SubjectDto(savedSubject);
+
     }
 }

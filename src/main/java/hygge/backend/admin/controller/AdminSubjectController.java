@@ -1,6 +1,7 @@
 package hygge.backend.admin.controller;
 
 import hygge.backend.dto.subject.SubjectDto;
+import hygge.backend.dto.subject.SubjectNoIdDto;
 import hygge.backend.service.SubjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ public class AdminSubjectController {
         return subjectService.getSubjectsBySchoolId(schoolId);
     }
 
-    // 새로운 과목 등록
-//    @PostMapping
-//    public SubjectDto enrollSubject(@RequestBody SubjectDto request) {
-//
-//    }
+     //새로운 과목 등록
+    @PostMapping
+    public SubjectDto enrollSubject(@RequestBody SubjectNoIdDto request) {
+        return subjectService.enrollSubject(request);
+    }
 }

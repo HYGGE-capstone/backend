@@ -1,6 +1,7 @@
 package hygge.backend.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,5 +39,17 @@ public class Subject {
 
     @OneToMany(mappedBy = "subject")
     private List<Team> teams = new ArrayList<>();
+
+    @Builder
+    public Subject(Long id, String name, String code, int year, Semester semester, String pName, String time, School school) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+        this.year = year;
+        this.semester = semester;
+        this.pName = pName;
+        this.time = time;
+        this.school = school;
+    }
 
 }
