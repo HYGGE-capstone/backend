@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @Tag(name = "과목", description = "과목 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/v1/subject")
@@ -34,8 +36,9 @@ public class SubjectController {
 
     })
     @GetMapping("/search")
-    public ResponseEntity<SearchSubjectResponse> searchSubject(@RequestParam("query") String query) {
-        SearchSubjectResponse response = subjectService.searchSubjects(query);
+    public ResponseEntity<SearchSubjectResponse> searchSubject(@RequestParam("query") String query, Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        SearchSubjectResponse response = subjectService.searchSubjects(query, memberId);
         return ResponseEntity.ok(response);
     }
 }
