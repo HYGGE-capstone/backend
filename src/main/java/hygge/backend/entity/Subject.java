@@ -1,5 +1,6 @@
 package hygge.backend.entity;
 
+import hygge.backend.dto.subject.SubjectDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,4 +53,12 @@ public class Subject {
         this.school = school;
     }
 
+    public void change(SubjectDto subjectDto) {
+        this.name = subjectDto.getName();
+        this.code = subjectDto.getCode();
+        this.year = subjectDto.getYear();
+        this.semester = subjectDto.getSemester();
+        this.pName = subjectDto.getPName();
+        this.time = subjectDto.getTime();
+    }
 }

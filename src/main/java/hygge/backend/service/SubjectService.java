@@ -58,6 +58,15 @@ public class SubjectService {
         Subject savedSubject = subjectRepository.save(newSubject);
 
         return new SubjectDto(savedSubject);
+    }
 
+    public SubjectDto fixSubject(SubjectDto subjectDto) {
+        Subject subject = subjectRepository.findById(subjectDto.getSubjectId())
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_SUBJECT));
+
+        subject.change(subjectDto);
+        Subject savedSubject = subjectRepository.save(subject);
+
+        return new SubjectDto(savedSubject);
     }
 }

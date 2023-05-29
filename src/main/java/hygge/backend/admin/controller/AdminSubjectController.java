@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "관리자 - 과목", description = "과목(관리자) 관련 API 입니다.")
+@Tag(name = "0 관리자 - 과목", description = "과목(관리자) 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/admin/subject")
 @RequiredArgsConstructor
@@ -23,9 +23,15 @@ public class AdminSubjectController {
         return subjectService.getSubjectsBySchoolId(schoolId);
     }
 
-     //새로운 과목 등록
+     // 새로운 과목 등록
     @PostMapping
     public SubjectDto enrollSubject(@RequestBody SubjectNoIdDto request) {
         return subjectService.enrollSubject(request);
+    }
+
+    // 과목 수정
+    @PutMapping
+    public SubjectDto fixSubject(@RequestBody SubjectDto request) {
+        return subjectService.fixSubject(request);
     }
 }
