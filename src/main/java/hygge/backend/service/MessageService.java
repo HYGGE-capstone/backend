@@ -71,7 +71,7 @@ public class MessageService {
         return new MessageDto(fromMessage);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<MessageRoomDto> getMessageRoom(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
