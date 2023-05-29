@@ -98,7 +98,7 @@ public class SubscribeService {
                             .code(subject.getCode())
                             .year(subject.getYear())
                             .semester(subject.getSemester())
-                            .pName(subject.getPName())
+                            .professorName(subject.getProfessorName())
                             .time(subject.getTime())
                             .build());
         }

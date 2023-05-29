@@ -12,6 +12,7 @@ import hygge.backend.repository.MemberRepository;
 import hygge.backend.repository.SchoolRepository;
 import hygge.backend.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class SubjectService {
     private final SubjectRepository subjectRepository;
@@ -69,8 +71,11 @@ public class SubjectService {
         Subject subject = subjectRepository.findById(subjectDto.getSubjectId())
                 .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_SUBJECT));
 
+        log.info("subjectDto : {}", subjectDto.getProfessorName());
         subject.change(subjectDto);
+        log.info("subject : {}", subject.getProfessorName());
         Subject savedSubject = subjectRepository.save(subject);
+        log.info("savedSubject : {}", savedSubject.getProfessorName());
 
         return new SubjectDto(savedSubject);
     }

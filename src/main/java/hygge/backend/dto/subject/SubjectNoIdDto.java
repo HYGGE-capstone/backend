@@ -28,7 +28,7 @@ public class SubjectNoIdDto {
     private Semester semester;
 
     @Schema(description = "과목 교수명", defaultValue = "윤대균")
-    private String pName;
+    private String professorName;
 
     @Schema(description = "과목 시간", defaultValue = "월F(팔309) 월G(팔317) 월H(팔317) 목F(팔309) 목G(팔336) 목H(팔336)")
     private String time;
@@ -38,7 +38,7 @@ public class SubjectNoIdDto {
         this.code = subject.getCode();
         this.year = subject.getYear();
         this.semester = subject.getSemester();
-        this.pName = subject.getPName();
+        this.professorName = subject.getProfessorName();
         this.time = subject.getTime();
         this.schoolId = subject.getSchool().getId();
     }
@@ -50,7 +50,7 @@ public class SubjectNoIdDto {
                 .code(this.code)
                 .year(this.year)
                 .semester(this.semester)
-                .pName(this.pName)
+                .professorName(this.professorName)
                 .time(this.time)
                 .school(school)
                 .build();
