@@ -1,7 +1,6 @@
 package hygge.backend.dto.response.subject;
 
-import hygge.backend.dto.SubjectDto;
-import hygge.backend.entity.Subject;
+import hygge.backend.dto.subject.SubjectDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

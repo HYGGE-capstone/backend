@@ -1,11 +1,9 @@
 package hygge.backend.controller;
 
-import hygge.backend.dto.SubjectDto;
 import hygge.backend.dto.SubscribeDto;
 import hygge.backend.dto.request.subscribe.SubscribeRequest;
 import hygge.backend.dto.response.ErrorResponse;
 import hygge.backend.dto.response.subscribe.SubscribeResponse;
-import hygge.backend.entity.Subscribe;
 import hygge.backend.service.SubscribeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

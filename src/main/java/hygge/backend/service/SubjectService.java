@@ -1,9 +1,8 @@
 package hygge.backend.service;
 
-import hygge.backend.dto.SubjectDto;
+import hygge.backend.dto.subject.SubjectDto;
 import hygge.backend.dto.response.subject.SearchSubjectResponse;
 import hygge.backend.entity.School;
-import hygge.backend.entity.Subject;
 import hygge.backend.error.exception.BusinessException;
 import hygge.backend.error.exception.ExceptionInfo;
 import hygge.backend.repository.SchoolRepository;

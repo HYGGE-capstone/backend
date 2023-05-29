@@ -1,13 +1,10 @@
 package hygge.backend.admin.controller;
 
-import hygge.backend.dto.SubjectDto;
+import hygge.backend.dto.subject.SubjectDto;
 import hygge.backend.service.SubjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,4 +21,10 @@ public class AdminSubjectController {
     public List<SubjectDto> getSubjectsBySchoolId(@RequestParam Long schoolId) {
         return subjectService.getSubjectsBySchoolId(schoolId);
     }
+
+    // 새로운 과목 등록
+//    @PostMapping
+//    public SubjectDto enrollSubject(@RequestBody SubjectDto request) {
+//
+//    }
 }

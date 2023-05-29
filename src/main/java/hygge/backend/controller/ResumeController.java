@@ -55,6 +55,21 @@ public class ResumeController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "과목에 해당하는 내 이력서 조회 메서드", description = "과목에 해당하는 내 이력서 조회 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이력서 조회 성공",
+                    content = @Content(schema = @Schema(implementation = ResumeDto.class))),
+            @ApiResponse(responseCode = "400", description = "이력서 조회 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
+    @GetMapping("/subject/{subjectId}/me")
+    public ResponseEntity<ResumeDto> getMyResumeBySubject(@PathVariable Long subjectId, Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        ResumeDto response = resumeService.getResumeBySubjectAndMember(subjectId, memberId);
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "이력서 수정 메서드", description = "이력서 수정 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이력서 수정 성공",

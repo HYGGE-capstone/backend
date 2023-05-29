@@ -1,4 +1,4 @@
-package hygge.backend.dto;
+package hygge.backend.dto.team;
 
 import hygge.backend.entity.Team;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,6 +41,8 @@ public class TeamDto {
     @Schema(description = "과목 코드", defaultValue = "F100")
     private String subjectCode;
 
+    @Schema(description = "리더 아이디", defaultValue = "0")
+    private Long leaderId;
 
     @Schema(description = "리더 여부", defaultValue = "false")
     private boolean isLeader;
@@ -52,6 +54,7 @@ public class TeamDto {
         this.teamDescription = team.getDescription();
         this.maxMember = team.getMaxMember();
         this.numMember = team.getNumMember();
+        this.leaderId = team.getLeader().getId();
         this.isLeader = false;
     }
 }

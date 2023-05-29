@@ -1,4 +1,4 @@
-package hygge.backend.dto;
+package hygge.backend.dto.subject;
 
 import hygge.backend.entity.Semester;
 import hygge.backend.entity.Subject;
@@ -16,6 +16,9 @@ public class SubjectDto {
 
     @Schema(description = "과목 아이디", defaultValue = "0")
     private Long subjectId;
+
+    @Schema(description = "학교 아이디", defaultValue = "0")
+    private Long schoolId;
 
     @Schema(description = "과목 이름", defaultValue = "SW캡스톤디자인")
     private String name;
@@ -43,5 +46,6 @@ public class SubjectDto {
         this.semester = subject.getSemester();
         this.pName = subject.getPName();
         this.time = subject.getTime();
+        this.schoolId = subject.getSchool().getId();
     }
 }
