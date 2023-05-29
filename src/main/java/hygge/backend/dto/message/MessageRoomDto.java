@@ -27,5 +27,6 @@ public class MessageRoomDto {
         this.toLoginId = messageRoom.getTo().getLoginId();
         this.toNickname = messageRoom.getTo().getNickname();
         this.lastUpdateTime = messageRoom.getLastUpdateTime();
+        this.isDirty = messageRoom.isDirty();
     }
 }
