@@ -46,6 +46,9 @@ public class Subject {
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
     private List<Subscribe> subscribes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    private List<Resume> resumes = new ArrayList<>();
+
     @Builder
     public Subject(Long id, String name, String code, int year, Semester semester, String professorName, String time, School school) {
         this.id = id;
