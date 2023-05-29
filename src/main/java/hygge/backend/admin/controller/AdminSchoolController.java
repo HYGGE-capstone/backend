@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "학교(관리자)", description = "학교(관리자) 관련 API 입니다.")
+@Tag(name = "관리자 - 학교", description = "학교(관리자) 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/admin/school")
 @RequiredArgsConstructor
