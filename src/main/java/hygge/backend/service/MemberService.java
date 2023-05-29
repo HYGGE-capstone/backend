@@ -132,6 +132,7 @@ public class MemberService {
                 .refreshToken(tokenDto.getRefreshToken())
                 .loginId(loginMember.getLoginId())
                 .nickname(loginMember.getNickname())
+                .role(loginMember.getRole().toString())
                 .accessTokenExpiresIn(tokenDto.getAccessTokenExpiresIn())
                 .refreshTokenExpiresIn(tokenDto.getRefreshTokenExpiresIn())
                 .build();

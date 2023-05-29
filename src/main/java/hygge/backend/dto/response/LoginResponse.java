@@ -23,6 +23,9 @@ public class LoginResponse {
     @Schema(description = "닉네임", defaultValue = "테스터")
     private String nickname;
 
+    @Schema(description = "역할", defaultValue = "ROLE_USER")
+    private String role;
+
     private Long accessTokenExpiresIn;
 
     private Long refreshTokenExpiresIn;
