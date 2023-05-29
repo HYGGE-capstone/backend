@@ -167,4 +167,13 @@ public class TeamService {
         return GetSubscribersNotBelongTeamResponse.builder().members(subscribersNotBelongTeamDtoList).build();
 
     }
+
+    @Transactional
+    public TeamDto deleteTeam(Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM));
+
+        teamRepository.delete(team);
+        return new TeamDto(team, false);
+    }
 }

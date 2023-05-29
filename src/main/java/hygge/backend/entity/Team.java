@@ -43,12 +43,19 @@ public class Team {
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<TeamApplicant> teamApplicants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private List<Offer> offers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private List<MemberTeam> memberTeams = new ArrayList<>();
 
 
     @Builder
     public Team(String name, String title, String description, int maxMember, int numMember, Member leader, Subject subject) {
+
         this.name = name;
         this.title = title;
         this.description = description;
