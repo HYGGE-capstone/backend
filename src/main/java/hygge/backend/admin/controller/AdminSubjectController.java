@@ -34,4 +34,10 @@ public class AdminSubjectController {
     public SubjectDto fixSubject(@RequestBody SubjectDto request) {
         return subjectService.fixSubject(request);
     }
+
+    // 과목 삭제(팀 있으면 삭제 x)
+    @DeleteMapping
+    public SubjectDto deleteSubject(@RequestParam Long subjectId) {
+        return subjectService.deleteSubject(subjectId);
+    }
 }
