@@ -1,4 +1,4 @@
-package hygge.backend.dto;
+package hygge.backend.dto.offer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package hygge.backend.dto;
+package hygge.backend.dto.offer;
 
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Team;
@@ -33,6 +33,9 @@ public class OfferTeamDto {
     @Schema(description = "현재 멤버 수 ", defaultValue = "1")
     private int numMember;
 
+    @Schema(description = "리더 아이디", defaultValue = "1")
+    private Long leaderId;
+
     public OfferTeamDto(Team team, Long offerId) {
         this.teamId = team.getId();
         this.teamName = team.getName();
@@ -41,5 +44,6 @@ public class OfferTeamDto {
         this.maxMember = team.getMaxMember();
         this.numMember = team.getNumMember();
         this.offerId = offerId;
+        this.leaderId = team.getLeader().getId();
     }
 }

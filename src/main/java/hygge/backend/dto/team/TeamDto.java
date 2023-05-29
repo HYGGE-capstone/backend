@@ -47,7 +47,7 @@ public class TeamDto {
     @Schema(description = "리더 여부", defaultValue = "false")
     private boolean isLeader;
 
-    public TeamDto(Team team) {
+    public TeamDto(Team team, boolean isLeader) {
         this.teamId = team.getId();
         this.teamName = team.getName();
         this.teamTitle = team.getTitle();
@@ -55,6 +55,6 @@ public class TeamDto {
         this.maxMember = team.getMaxMember();
         this.numMember = team.getNumMember();
         this.leaderId = team.getLeader().getId();
-        this.isLeader = false;
+        this.isLeader = isLeader;
     }
 }

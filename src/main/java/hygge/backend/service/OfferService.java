@@ -1,7 +1,7 @@
 package hygge.backend.service;
 
-import hygge.backend.dto.OfferResultDto;
-import hygge.backend.dto.OfferTeamDto;
+import hygge.backend.dto.offer.OfferResultDto;
+import hygge.backend.dto.offer.OfferTeamDto;
 import hygge.backend.dto.notification.NewOfferResultNotiDto;
 import hygge.backend.dto.notification.NewTeamMemberNotiDto;
 import hygge.backend.dto.request.offer.OfferRequest;

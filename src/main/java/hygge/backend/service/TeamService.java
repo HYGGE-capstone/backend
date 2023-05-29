@@ -113,18 +113,7 @@ public class TeamService {
             boolean isLeader = false;
             if(team.getLeader().getId() == memberId) isLeader = true;
 
-            teams.add(TeamDto.builder()
-                            .teamId(team.getId())
-                            .teamName(team.getName())
-                            .teamTitle(team.getTitle())
-                            .teamDescription(team.getDescription())
-                            .maxMember(team.getMaxMember())
-                            .numMember(team.getNumMember())
-                            .isLeader(isLeader)
-                            .subjectId(subject.getId())
-                            .subjectName(subject.getName())
-                            .subjectCode(subject.getCode())
-                    .build());
+            teams.add(new TeamDto(team, isLeader));
         }
         return TeamResponse.builder().teams(teams).build();
     }
@@ -139,17 +128,7 @@ public class TeamService {
 
         for (Team team : subject.getTeams()) {
 
-            teams.add(TeamDto.builder()
-                    .teamId(team.getId())
-                    .teamName(team.getName())
-                    .teamTitle(team.getTitle())
-                    .teamDescription(team.getDescription())
-                    .maxMember(team.getMaxMember())
-                    .numMember(team.getNumMember())
-                    .subjectId(subject.getId())
-                    .subjectName(subject.getName())
-                    .subjectCode(subject.getCode())
-                    .build());
+            teams.add(new TeamDto(team, false));
         }
         return TeamResponse.builder().teams(teams).build();
     }

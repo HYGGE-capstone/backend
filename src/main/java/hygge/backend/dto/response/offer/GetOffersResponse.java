@@ -1,6 +1,6 @@
 package hygge.backend.dto.response.offer;
 
-import hygge.backend.dto.OfferTeamDto;
+import hygge.backend.dto.offer.OfferTeamDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

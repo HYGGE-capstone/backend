@@ -1,12 +1,11 @@
 package hygge.backend.controller;
 
-import hygge.backend.dto.OfferResultDto;
+import hygge.backend.dto.offer.OfferResultDto;
 import hygge.backend.dto.request.offer.OfferRequest;
 import hygge.backend.dto.request.offer.OfferResultRequestDto;
 import hygge.backend.dto.response.ErrorResponse;
 import hygge.backend.dto.response.offer.GetOffersResponse;
 import hygge.backend.dto.response.offer.OfferResponse;
-import hygge.backend.dto.response.teamapplicant.ApplyResponse;
 import hygge.backend.service.OfferService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,7 +27,7 @@ public class OfferController {
     private final OfferService offerService;
 
     // 구독한 과목에 대한 합류 제안 조회
-    @Operation(summary = "구독한 과목에 대한 합류 제안 조회 조회 메서드", description = "구독한 과목에 대한 합류 제안 조회 메서드입니다.")
+    @Operation(summary = "구독한 과목에 대한 합류 제안 조회 메서드", description = "구독한 과목에 대한 합류 제안 조회 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "구독한 과목에 대한 합류 제안 조회 성공",
                     content = @Content(schema = @Schema(implementation = GetOffersResponse.class))),
@@ -37,10 +36,9 @@ public class OfferController {
 
     })
     @GetMapping
-    public ResponseEntity<GetOffersResponse> getOffers(Principal principal, @RequestParam Long subjectId) {
+    public GetOffersResponse getOffers(Principal principal, @RequestParam Long subjectId) {
         Long memberId = Long.parseLong(principal.getName());
-        GetOffersResponse response = offerService.getOffers(memberId, subjectId);
-        return ResponseEntity.ok(response);
+        return offerService.getOffers(memberId, subjectId);
     }
 
     // 구독자에게 팀이 제안 POST
