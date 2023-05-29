@@ -58,8 +58,8 @@ public class MessageService {
                 .build();
 
         Message toMessage = Message.builder()
-                .from(to)
-                .to(from)
+                .from(from)
+                .to(to)
                 .content(request.getContent())
                 .messageRoom(savedToMessageRoom)
                 .isOpened(false)
