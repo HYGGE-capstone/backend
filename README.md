@@ -31,3 +31,9 @@ API 명세 : http://ajougoodteam.com:8080/api-docs
 - jwt : JWT 인증에 필요한 클래스들을 저장
 - repository : Repository 클래스들을 저장
 - service : 서비스 로직이 담긴 클래스들을 저장
+
+# 서비스 설명
+[팜플렛_3.0.pdf](https://github.com/HYGGE-capstone/backend/files/11626851/_3.0.pdf)
+
+## 프론트엔드 
+https://github.com/HYGGE-capstone/frontend
