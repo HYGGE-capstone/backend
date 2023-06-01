@@ -33,7 +33,7 @@ API 명세 : http://ajougoodteam.com:8080/api-docs
 - service : 서비스 로직이 담긴 클래스들을 저장
 
 # 서비스 설명
-[팜플렛_3.0.pdf](https://github.com/HYGGE-capstone/backend/files/11626851/_3.0.pdf)
+![팜플렛_3 0](https://github.com/HYGGE-capstone/backend/assets/44251670/358e7dd2-f979-48da-8f9e-12caa341bcc2)
 
 ## 프론트엔드 
 https://github.com/HYGGE-capstone/frontend
