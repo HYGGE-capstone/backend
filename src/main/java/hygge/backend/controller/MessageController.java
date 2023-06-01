@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
-@Tag(name = "쪽지", description = "쪽지 관련 API 입니다.")
+@Tag(name = "회원 - 쪽지", description = "쪽지 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/v1/message")
 @RequiredArgsConstructor

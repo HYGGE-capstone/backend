@@ -3,6 +3,7 @@ package hygge.backend.controller;
 import hygge.backend.dto.notification.NotiDirtyCheck;
 import hygge.backend.dto.notification.NotificationListDto;
 import hygge.backend.service.NotificaitonService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
+@Tag(name = "회원 - 알림", description = "알림 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/v1/noti")
 @RequiredArgsConstructor

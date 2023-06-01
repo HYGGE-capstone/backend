@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@Tag(name = "구독", description = "구독 관련 API 입니다.")
+@Tag(name = "회원 - 구독", description = "구독 관련 API 입니다.")
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/subscribe")

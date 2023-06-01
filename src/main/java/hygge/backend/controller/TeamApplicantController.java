@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@Tag(name = "팀 지원", description = "팀 지원 관련 API 입니다.")
+@Tag(name = "회원 - 팀 지원", description = "팀 지원 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/v1/applicant")
 @RequiredArgsConstructor

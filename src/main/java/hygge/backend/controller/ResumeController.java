@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@Tag(name = "이력서", description = "이력서 관련 API 입니다.")
+@Tag(name = "회원 - 이력서", description = "이력서 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/v1/resume")
 @RequiredArgsConstructor

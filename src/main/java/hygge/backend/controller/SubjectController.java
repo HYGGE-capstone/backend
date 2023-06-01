@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
-@Tag(name = "과목", description = "과목 관련 API 입니다.")
+@Tag(name = "회원 - 과목", description = "과목 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/v1/subject")
 @RequiredArgsConstructor

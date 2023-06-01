@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "0 관리자 - 팀", description = "팀(관리자) 관련 API 입니다.")
+@Tag(name = "관리자 - 팀", description = "팀(관리자) 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/admin/team")
 @RequiredArgsConstructor
