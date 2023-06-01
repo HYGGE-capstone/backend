@@ -1,7 +1,16 @@
 package hygge.backend.admin.controller;
 
+import hygge.backend.dto.error.ErrorResponse;
 import hygge.backend.dto.member.MemberDto;
+import hygge.backend.dto.member.SignupResponse;
+import hygge.backend.dto.message.MessageRoomDto;
 import hygge.backend.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +28,14 @@ public class AdminMemberController {
 
     private final MemberService memberService;
 
-    // 학교에 등록된 멤버 조회
+    @Operation(summary = "학교에 등록된 멤버 조회 메서드", description = "학교에 등록된 멤버 조회 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.class)))),
+            @ApiResponse(responseCode = "400", description = "조회 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
     @GetMapping
     public List<MemberDto> getMembersBySchoolId(@RequestParam Long schoolId) {
         return memberService.getMembersBySchoolId(schoolId);
