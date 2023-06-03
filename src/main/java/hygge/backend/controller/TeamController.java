@@ -92,6 +92,13 @@ public class TeamController {
     }
 
     // 팀 탈퇴
+    @Operation(summary = "팀 탈퇴 메서드", description = "팀 탈퇴 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "팀 탈퇴 성공.",
+                    content = @Content(schema = @Schema(implementation = LeaveTeamDto.class))),
+            @ApiResponse(responseCode = "400", description = "팀 탈퇴 실패.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/leave")
     public LeaveTeamDto leaveTeam(Principal principal, @RequestBody LeaveTeamDto request) {
         Long memberId = Long.parseLong(principal.getName());
@@ -99,6 +106,13 @@ public class TeamController {
     }
 
     // 팀장 위임
+    @Operation(summary = "팀장 위임 메서드", description = "팀장 위임 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "팀장 위임 성공.",
+                    content = @Content(schema = @Schema(implementation = MandateLeaderDto.class))),
+            @ApiResponse(responseCode = "400", description = "팀장 위임 실패.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/mandate")
     public MandateLeaderDto mandateLeader(Principal principal, @RequestBody MandateLeaderDto request) {
         Long memberId = Long.parseLong(principal.getName());
@@ -106,6 +120,13 @@ public class TeamController {
     }
 
     // 팀원 추방
+    @Operation(summary = "팀원 추방 메서드", description = "팀원 추방 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "팀원 추방 성공.",
+                    content = @Content(schema = @Schema(implementation = KickOutMemberDto.class))),
+            @ApiResponse(responseCode = "400", description = "팀원 추방 실패.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/kick-out")
     public KickOutMemberDto kickOutMember(Principal principal, @RequestBody KickOutMemberDto request) {
         Long memberId = Long.parseLong(principal.getName());
@@ -113,6 +134,13 @@ public class TeamController {
     }
 
     // 팀 정보 수정
+    @Operation(summary = "팀 정보 수정 메서드", description = "팀 정보 수정 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "팀 정보 수정 성공.",
+                    content = @Content(schema = @Schema(implementation = TeamDto.class))),
+            @ApiResponse(responseCode = "400", description = "팀 정보 수정 실패.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PutMapping("/update")
     public TeamDto updateTeam(Principal principal, @RequestBody UpdateTeamDto request) {
         Long memberId = Long.parseLong(principal.getName());
@@ -120,6 +148,13 @@ public class TeamController {
     }
 
     // 팀 해체
+    @Operation(summary = "팀 해체 메서드", description = "팀 해체 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "팀 해체 성공.",
+                    content = @Content(schema = @Schema(implementation = TeamDto.class))),
+            @ApiResponse(responseCode = "400", description = "팀 해체 실패.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @DeleteMapping("/dissolve")
     public TeamDto dissolveTeam(Principal principal, @RequestParam Long teamId) {
         Long memberId = Long.parseLong(principal.getName());
