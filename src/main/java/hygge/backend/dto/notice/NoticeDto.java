@@ -1,5 +1,6 @@
 package hygge.backend.dto.notice;
 
+import hygge.backend.entity.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,5 +14,12 @@ public class NoticeDto {
     private Long noticeId;
     private String noticeContent;
     private Long teamId;
-    private Long teamName;
+    private String teamName;
+
+    public NoticeDto(Notice notice) {
+        this.noticeId = notice.getId();
+        this.noticeContent = notice.getContent();
+        this.teamId = notice.getTeam().getId();
+        this.teamName = notice.getTeam().getName();
+    }
 }
