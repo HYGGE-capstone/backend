@@ -1,11 +1,7 @@
 package hygge.backend.controller;
 
-import hygge.backend.dto.team.CreateTeamRequest;
+import hygge.backend.dto.team.*;
 import hygge.backend.dto.error.ErrorResponse;
-import hygge.backend.dto.team.CreateTeamResponse;
-import hygge.backend.dto.team.GetMembersByTeamResponse;
-import hygge.backend.dto.team.GetSubscribersNotBelongTeamResponse;
-import hygge.backend.dto.team.TeamResponse;
 import hygge.backend.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -93,6 +89,13 @@ public class TeamController {
         Long memberId = Long.parseLong(principal.getName());
         GetSubscribersNotBelongTeamResponse response = teamService.getSubscribersNotBelongTeam(memberId, subjectId);
         return ResponseEntity.ok(response);
+    }
+
+    // 팀 탈퇴
+    @PostMapping("/leave")
+    public LeaveTeamDto leaveTeam(Principal principal, @RequestBody LeaveTeamDto request) {
+        Long memberId = Long.parseLong(principal.getName());
+        return teamService.leaveTeam(memberId, request);
     }
 
 }

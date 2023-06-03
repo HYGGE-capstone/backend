@@ -18,6 +18,7 @@ import static hygge.backend.error.exception.ExceptionInfo.*;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TeamService {
     private final MemberRepository memberRepository;
@@ -30,7 +31,6 @@ public class TeamService {
     private final NotificaitonService notificaitonService;
     private final SubscribeRepository subscribeRepository;
 
-    @Transactional
     public CreateTeamResponse createTeam(Long memberId, CreateTeamRequest request) {
         log.info("TeamService.createTeam {}", memberId);
 
@@ -166,12 +166,28 @@ public class TeamService {
 
     }
 
-    @Transactional
     public TeamDto deleteTeam(Long teamId) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM));
 
         teamRepository.delete(team);
         return new TeamDto(team, false);
+    }
+
+    public LeaveTeamDto leaveTeam(Long memberId, LeaveTeamDto leaveTeamDto) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+        Team team = teamRepository.findById(leaveTeamDto.getTeamId())
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM));
+        MemberTeam memberTeam = memberTeamRepository.findByMemberIdAndTeamId(member.getId(), team.getId())
+                .orElseThrow(() -> new BusinessException(UNAUTHORIZED_REQUEST));
+
+        if(team.getLeader().getId().equals(member.getId()))
+            throw new BusinessException(LEADER_CANT_LEAVE);
+
+        team.leave();
+        memberTeamRepository.delete(memberTeam);
+
+        return leaveTeamDto;
     }
 }
