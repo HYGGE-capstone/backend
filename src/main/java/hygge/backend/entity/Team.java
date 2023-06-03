@@ -43,6 +43,10 @@ public class Team {
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "NOTICE_ID")
+    private Notice notice;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<TeamApplicant> teamApplicants = new ArrayList<>();
 
@@ -55,7 +59,6 @@ public class Team {
 
     @Builder
     public Team(String name, String title, String description, int maxMember, int numMember, Member leader, Subject subject) {
-
         this.name = name;
         this.title = title;
         this.description = description;
