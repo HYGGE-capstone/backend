@@ -75,5 +75,8 @@ public class Team {
 
     public void deleteNotice() { this.notice = null; }
     public void leave() { this.numMember -= 1;}
+    public void mandateLeader(Member mandatedLeader){
+        this.leader = mandatedLeader;
+    }
 
 }

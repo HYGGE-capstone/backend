@@ -43,6 +43,7 @@ public enum ExceptionInfo {
     ALREADY_APPLY("TM-003", "이미 해당 팀에 지원하였습니다."),
     MIN_TEAM_MEMBER("TM-004", "최대 멤버수는 2 이상이어야 합니다."),
     LEADER_CANT_LEAVE("TM-005", "리더는 팀을 탈퇴 할 수 없습니다."),
+    NOT_BELONG_TEAM("TM-006", "요청하신 멤버가 해당 팀에 소속되지 않았습니다."),
 
     // 이력서
     ALREADY_HAVE_RESUME("RS-000", "이력서가 이미 존재합니다."),

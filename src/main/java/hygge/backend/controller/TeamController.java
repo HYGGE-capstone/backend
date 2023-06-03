@@ -98,4 +98,13 @@ public class TeamController {
         return teamService.leaveTeam(memberId, request);
     }
 
+    // 팀장 위임
+    @PostMapping("/mandate")
+    public MandateLeaderDto mandateLeader(Principal principal, @RequestBody MandateLeaderDto request) {
+        Long memberId = Long.parseLong(principal.getName());
+        return teamService.mandateLeader(memberId, request);
+    }
+    // 팀원 추방
+    // 팀 해체
+
 }

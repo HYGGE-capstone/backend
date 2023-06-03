@@ -190,4 +190,22 @@ public class TeamService {
 
         return leaveTeamDto;
     }
+
+    public MandateLeaderDto mandateLeader(Long memberId, MandateLeaderDto mandateLeaderDto) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+        Member mandatedLeader = memberRepository.findById(mandateLeaderDto.getMemberId())
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+        Team team = teamRepository.findById(mandateLeaderDto.getTeamId())
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM));
+        if(!team.getLeader().getId().equals(member.getId()))
+            throw new BusinessException(UNAUTHORIZED_REQUEST);
+        if(!memberTeamRepository.existsByMemberIdAndTeamId(mandatedLeader.getId(), team.getId()))
+            throw new BusinessException(NOT_BELONG_TEAM);
+
+        team.mandateLeader(mandatedLeader);
+        teamRepository.save(team);
+
+        return mandateLeaderDto;
+    }
 }
