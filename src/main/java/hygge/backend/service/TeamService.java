@@ -247,4 +247,19 @@ public class TeamService {
 
         return new TeamDto(savedTeam, false);
     }
+
+    public TeamDto dissolveTeam(Long memberId, Long teamId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM));
+        if(!team.getLeader().getId().equals(member.getId()))
+            throw new BusinessException(UNAUTHORIZED_REQUEST);
+        if (team.getNumMember() > 1)
+            throw new BusinessException(TEAM_HAVE_MEMBER);
+
+        teamRepository.delete(team);
+
+        return new TeamDto(team, false);
+    }
 }

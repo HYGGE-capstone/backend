@@ -120,5 +120,10 @@ public class TeamController {
     }
 
     // 팀 해체
+    @DeleteMapping("/dissolve")
+    public TeamDto dissolveTeam(Principal principal, @RequestParam Long teamId) {
+        Long memberId = Long.parseLong(principal.getName());
+        return teamService.dissolveTeam(memberId, teamId);
+    }
 
 }
