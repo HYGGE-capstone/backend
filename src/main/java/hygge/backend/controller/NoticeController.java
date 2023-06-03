@@ -2,6 +2,7 @@ package hygge.backend.controller;
 
 import hygge.backend.dto.notice.NoticeDto;
 import hygge.backend.dto.notice.PostNoticeDto;
+import hygge.backend.dto.notice.UpdateNoticeDto;
 import hygge.backend.service.NoticeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,13 @@ public class NoticeController {
         return noticeService.postNotice(memberId, request);
     }
 
-//    // 수정
-//    @PutMapping
-//    public NoticeDto updateNotice(Principal principal, @RequestBody UpdateNoticeDto request) {
-//        Long memberId = Long.parseLong(principal.getName());
-//        return noticeService.updateNotice(memberId, request);
-//    }
-//
+    // 수정
+    @PutMapping
+    public NoticeDto updateNotice(Principal principal, @RequestBody UpdateNoticeDto request) {
+        Long memberId = Long.parseLong(principal.getName());
+        return noticeService.updateNotice(memberId, request);
+    }
+
 //    // 삭제
 //    @DeleteMapping
 //    public NoticeDto deleteNotice(Principal principal, @RequestParam Long noticeId) {

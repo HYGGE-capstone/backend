@@ -26,4 +26,8 @@ public class Notice {
     public Notice(String content) {
         this.content = content;
     }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }

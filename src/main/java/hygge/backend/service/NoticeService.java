@@ -2,6 +2,7 @@ package hygge.backend.service;
 
 import hygge.backend.dto.notice.NoticeDto;
 import hygge.backend.dto.notice.PostNoticeDto;
+import hygge.backend.dto.notice.UpdateNoticeDto;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Notice;
 import hygge.backend.entity.Team;
@@ -13,9 +14,11 @@ import hygge.backend.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class NoticeService {
     private final MemberRepository memberRepository;
@@ -37,5 +40,19 @@ public class NoticeService {
         teamRepository.save(team);
 
         return new NoticeDto(savedNotice, team);
+    }
+
+    public NoticeDto updateNotice(Long memberId, UpdateNoticeDto updateNoticeDto) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
+        Notice notice = noticeRepository.findById(updateNoticeDto.getNoticeId())
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_NOTICE));
+        if(!notice.getTeam().getLeader().getId().equals(member.getId()))
+            throw new BusinessException(ExceptionInfo.UNAUTHORIZED_REQUEST);
+
+        notice.updateContent(updateNoticeDto.getNoticeContent());
+        Notice savedNotice = noticeRepository.save(notice);
+
+        return new NoticeDto(savedNotice);
     }
 }
