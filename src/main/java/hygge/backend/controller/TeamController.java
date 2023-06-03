@@ -104,7 +104,14 @@ public class TeamController {
         Long memberId = Long.parseLong(principal.getName());
         return teamService.mandateLeader(memberId, request);
     }
+
     // 팀원 추방
+    @PostMapping("/kickout")
+    public KickOutMemberDto kickOutMember(Principal principal, @RequestBody KickOutMemberDto request) {
+        Long memberId = Long.parseLong(principal.getName());
+        return teamService.kickOutMember(memberId, request);
+    }
+
     // 팀 해체
 
 }
