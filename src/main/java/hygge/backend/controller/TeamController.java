@@ -106,10 +106,17 @@ public class TeamController {
     }
 
     // 팀원 추방
-    @PostMapping("/kickout")
+    @PostMapping("/kick-out")
     public KickOutMemberDto kickOutMember(Principal principal, @RequestBody KickOutMemberDto request) {
         Long memberId = Long.parseLong(principal.getName());
         return teamService.kickOutMember(memberId, request);
+    }
+
+    // 팀 정보 수정
+    @PutMapping("/update")
+    public TeamDto updateTeam(Principal principal, @RequestBody UpdateTeamDto request) {
+        Long memberId = Long.parseLong(principal.getName());
+        return teamService.updateTeam(memberId, request);
     }
 
     // 팀 해체

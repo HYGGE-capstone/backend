@@ -1,5 +1,6 @@
 package hygge.backend.entity;
 
+import hygge.backend.dto.team.UpdateTeamDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -77,6 +78,12 @@ public class Team {
     public void leave() { this.numMember -= 1;}
     public void mandateLeader(Member mandatedLeader){
         this.leader = mandatedLeader;
+    }
+
+    public void update(UpdateTeamDto updateTeamDto) {
+        this.name = updateTeamDto.getTeamName();
+        this.description = updateTeamDto.getTeamDescription();
+        this.title = updateTeamDto.getTeamTitle();
     }
 
 }

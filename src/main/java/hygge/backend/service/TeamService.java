@@ -233,4 +233,18 @@ public class TeamService {
 
         return kickOutMemberDto;
     }
+
+    public TeamDto updateTeam(Long memberId, UpdateTeamDto updateTeamDto) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+        Team team = teamRepository.findById(updateTeamDto.getTeamId())
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM));
+        if(!team.getLeader().getId().equals(member.getId()))
+            throw new BusinessException(UNAUTHORIZED_REQUEST);
+
+        team.update(updateTeamDto);
+        Team savedTeam = teamRepository.save(team);
+
+        return new TeamDto(savedTeam, false);
+    }
 }
