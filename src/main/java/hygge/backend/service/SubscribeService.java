@@ -32,7 +32,7 @@ public class SubscribeService {
     private final MemberRepository memberRepository;
     private final SubjectRepository subjectRepository;
 
-    private final NotificaitonService notificaitonService;
+    private final NotificationService notificaitonService;
 
     @Transactional
     public SubscribeDto subscribe(SubscribeDto subscribeDto) {

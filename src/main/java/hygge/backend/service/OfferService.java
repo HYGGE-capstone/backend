@@ -32,7 +32,7 @@ public class OfferService {
     private final TeamRepository teamRepository;
 
     private final MemberTeamRepository memberTeamRepository;
-    private final NotificaitonService notificaitonService;
+    private final NotificationService notificaitonService;
 
     @Transactional(readOnly = true)
     public GetOffersResponse getOffers(Long memberId, Long subjectId) {

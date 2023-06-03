@@ -35,7 +35,7 @@ public class TeamApplicantService {
     private final TeamApplicantRepository teamApplicantRepository;
     private final MemberTeamRepository memberTeamRepository;
 
-    private final NotificaitonService notificaitonService;
+    private final NotificationService notificaitonService;
 
     @Transactional(readOnly = true)
     public GetApplicantsResponse getApplicants(Long memberId, Long teamId) {

@@ -28,7 +28,7 @@ public class TeamService {
 
     private final MemberTeamRepository memberTeamRepository;
 
-    private final NotificaitonService notificaitonService;
+    private final NotificationService notificaitonService;
     private final SubscribeRepository subscribeRepository;
 
     public CreateTeamResponse createTeam(Long memberId, CreateTeamRequest request) {

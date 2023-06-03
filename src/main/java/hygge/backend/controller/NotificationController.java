@@ -2,7 +2,7 @@ package hygge.backend.controller;
 
 import hygge.backend.dto.notification.NotiDirtyCheck;
 import hygge.backend.dto.notification.NotificationListDto;
-import hygge.backend.service.NotificaitonService;
+import hygge.backend.service.NotificationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class NotificationController {
 
-    private final NotificaitonService notificaitonService;
+    private final NotificationService notificaitonService;
 
     @GetMapping
     public NotificationListDto getNotifications(Principal principal) {

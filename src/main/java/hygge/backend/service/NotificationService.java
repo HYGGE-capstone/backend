@@ -24,7 +24,7 @@ import static hygge.backend.error.exception.ExceptionInfo.CANNOT_FIND_MEMBER;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class NotificaitonService {
+public class NotificationService {
 
     private final SubscribeRepository subscribeRepository;
     private final MemberRepository memberRepository;
