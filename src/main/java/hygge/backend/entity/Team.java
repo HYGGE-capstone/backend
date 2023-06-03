@@ -43,7 +43,7 @@ public class Team {
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "NOTICE_ID")
     private Notice notice;
 
