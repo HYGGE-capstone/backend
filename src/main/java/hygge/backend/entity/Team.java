@@ -73,4 +73,6 @@ public class Team {
     }
     public void postNotice(Notice notice) { this.notice = notice;}
 
+    public void deleteNotice() { this.notice = null; }
+
 }

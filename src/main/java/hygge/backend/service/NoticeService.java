@@ -55,4 +55,19 @@ public class NoticeService {
 
         return new NoticeDto(savedNotice);
     }
+
+    public NoticeDto deleteNotice(Long memberId, Long noticeId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_NOTICE));
+        if(!notice.getTeam().getLeader().getId().equals(member.getId()))
+            throw new BusinessException(ExceptionInfo.UNAUTHORIZED_REQUEST);
+
+        notice.getTeam().deleteNotice();
+        teamRepository.save(notice.getTeam());
+        noticeRepository.delete(notice);
+
+        return new NoticeDto(notice);
+    }
 }

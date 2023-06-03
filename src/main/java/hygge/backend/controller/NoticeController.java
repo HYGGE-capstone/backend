@@ -32,13 +32,13 @@ public class NoticeController {
         return noticeService.updateNotice(memberId, request);
     }
 
-//    // 삭제
-//    @DeleteMapping
-//    public NoticeDto deleteNotice(Principal principal, @RequestParam Long noticeId) {
-//        Long memberId = Long.parseLong(principal.getName());
-//        return noticeService.deleteNotice(memberId, noticeId);
-//    }
-//
+    // 삭제
+    @DeleteMapping
+    public NoticeDto deleteNotice(Principal principal, @RequestParam Long noticeId) {
+        Long memberId = Long.parseLong(principal.getName());
+        return noticeService.deleteNotice(memberId, noticeId);
+    }
+
 //    // 조회
 //    @GetMapping
 //    public NoticeDto getNotice(Principal principal, @RequestParam Long teamId) {
