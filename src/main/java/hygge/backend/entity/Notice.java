@@ -1,6 +1,7 @@
 package hygge.backend.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,11 @@ public class Notice {
     @Column(name = "NOTICE_CONTENT")
     private String content;
 
-    @OneToOne
+    @OneToOne(mappedBy = "notice")
     private Team team;
+
+    @Builder
+    public Notice(String content) {
+        this.content = content;
+    }
 }

@@ -71,5 +71,6 @@ public class Team {
     public void joinMember() {
         this.numMember += 1;
     }
+    public void postNotice(Notice notice) { this.notice = notice;}
 
 }

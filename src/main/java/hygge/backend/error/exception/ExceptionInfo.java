@@ -49,7 +49,10 @@ public enum ExceptionInfo {
     ALREADY_SUBSCRIBE("SB-000", "이미 구독한 과목입니다."),
 
     // 과목
-    TEAMS_EXIST("SJ-000", "과목에 소속된 팀이 존재합니다.");
+    TEAMS_EXIST("SJ-000", "과목에 소속된 팀이 존재합니다."),
+
+    // 공지
+    ALREADY_HAVE_NOTICE("NT-000", "공지가 이미 존재합니다.");
 
     private final String code;
     private final String msg;
