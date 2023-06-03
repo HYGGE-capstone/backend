@@ -26,8 +26,10 @@ public class Team {
     private String name;
 
 
+    @Column(name = "TEAM_TITLE")
     private String title;
 
+    @Column(name = "TEAM_DESCRIPTION", length = 3000)
     private String description;
 
     @Column(name = "MAX_MEMBER")

@@ -22,7 +22,7 @@ public class Resume {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @Column(name = "RESUME_CONTENT")
+    @Column(name = "RESUME_CONTENT", length = 3000)
     private String content;
 
     @Column(name = "RESUME_TITLE")
