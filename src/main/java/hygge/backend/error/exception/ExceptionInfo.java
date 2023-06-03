@@ -53,7 +53,8 @@ public enum ExceptionInfo {
     TEAMS_EXIST("SJ-000", "과목에 소속된 팀이 존재합니다."),
 
     // 공지
-    ALREADY_HAVE_NOTICE("NT-000", "공지가 이미 존재합니다.");
+    ALREADY_HAVE_NOTICE("NT-000", "공지가 이미 존재합니다."),
+    NOT_HAVE_NOTICE("NT-001", "등록된 공지가 없습니다.");
 
     private final String code;
     private final String msg;

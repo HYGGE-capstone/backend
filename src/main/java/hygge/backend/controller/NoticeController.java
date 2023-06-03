@@ -39,10 +39,10 @@ public class NoticeController {
         return noticeService.deleteNotice(memberId, noticeId);
     }
 
-//    // 조회
-//    @GetMapping
-//    public NoticeDto getNotice(Principal principal, @RequestParam Long teamId) {
-//        Long memberId = Long.parseLong(principal.getName());
-//        return noticeService.getNotice(memberId, teamId);
-//    }
+    // 조회
+    @GetMapping
+    public NoticeDto getNotice(Principal principal, @RequestParam Long teamId) {
+        Long memberId = Long.parseLong(principal.getName());
+        return noticeService.getNotice(memberId, teamId);
+    }
 }

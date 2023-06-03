@@ -9,6 +9,7 @@ import hygge.backend.entity.Team;
 import hygge.backend.error.exception.BusinessException;
 import hygge.backend.error.exception.ExceptionInfo;
 import hygge.backend.repository.MemberRepository;
+import hygge.backend.repository.MemberTeamRepository;
 import hygge.backend.repository.NoticeRepository;
 import hygge.backend.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class NoticeService {
     private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
     private final NoticeRepository noticeRepository;
+    private final MemberTeamRepository memberTeamRepository;
 
     public NoticeDto postNotice(Long memberId, PostNoticeDto postNoticeDto) {
         Member member = memberRepository.findById(memberId)
@@ -69,5 +71,21 @@ public class NoticeService {
         noticeRepository.delete(notice);
 
         return new NoticeDto(notice);
+    }
+
+    @Transactional(readOnly = true)
+    public NoticeDto getNotice(Long memberId, Long teamId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_TEAM));
+
+        if (!memberTeamRepository.existsByMemberIdAndTeamId(member.getId(), team.getId()))
+            throw new BusinessException(ExceptionInfo.UNAUTHORIZED_REQUEST);
+
+        if(team.getNotice() == null)
+            throw new BusinessException(ExceptionInfo.NOT_HAVE_NOTICE);
+
+        return new NoticeDto(team.getNotice());
     }
 }
