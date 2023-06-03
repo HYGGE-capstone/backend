@@ -17,4 +17,7 @@ public class Notice {
 
     @Column(name = "NOTICE_CONTENT")
     private String content;
+
+    @OneToOne
+    private Team team;
 }
