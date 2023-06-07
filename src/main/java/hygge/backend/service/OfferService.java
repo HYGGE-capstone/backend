@@ -1,5 +1,6 @@
 package hygge.backend.service;
 
+import hygge.backend.dto.notification.OfferNotiDto;
 import hygge.backend.dto.offer.OfferResultDto;
 import hygge.backend.dto.offer.OfferTeamDto;
 import hygge.backend.dto.notification.NewOfferResultNotiDto;
@@ -93,6 +94,11 @@ public class OfferService {
                 .build();
 
         Offer savedOffer = offerRepository.save(offer);
+
+        // 제안 알림 (제안 받을 사람에게 팀 이름으로)
+        Subject subject = team.getSubject();
+        notificaitonService.sendNotification(
+                new OfferNotiDto(subject.getName(), subject.getCode(), team.getName(), subscriber.getId()));
 
         return new OfferResponse(savedOffer);
     }

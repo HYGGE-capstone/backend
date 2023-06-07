@@ -23,6 +23,7 @@ import static hygge.backend.error.exception.ExceptionInfo.CANNOT_FIND_MEMBER;
 
 @Service
 @Slf4j
+@Transactional
 @RequiredArgsConstructor
 public class NotificationService {
 
@@ -34,7 +35,6 @@ public class NotificationService {
     private final MemberTeamRepository memberTeamRepository;
 
     // 새로운 팀 생성 알림
-    @Transactional
     public void sendNotification(NotificationCase notiCase, NewTeamNotiDto newTeamNotiDto) {
 
         log.info("{} NOTIFICATION SEND", notiCase);
@@ -57,8 +57,22 @@ public class NotificationService {
         }
     }
 
+    // 팀 합류제안 알림
+    public void sendNotification(OfferNotiDto offerNotiDto) {
+        Member to = memberRepository.findById(offerNotiDto.getTo())
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+
+        Notification notification = Notification.builder()
+                .to(to)
+                .from(offerNotiDto.getFrom())
+                .content(offerNotiDto.getMsg())
+                .isOpened(false)
+                .build();
+
+        notificationRepository.save(notification);
+    }
+
     // 새로운 구독자 알림
-    @Transactional
     public void sendNotification(NotificationCase notiCase, NewSubscriberNotiDto newSubscriberNotiDto) {
 
         log.info("{} NOTIFICATION SEND", notiCase);
@@ -83,7 +97,6 @@ public class NotificationService {
     }
 
     // 새로운 지원자 알림
-    @Transactional
     public void sendNotification(NotificationCase notiCase, NewApplicantNotiDto newApplicantNotiDto){
         log.info("{} NOTIFICATION SEND", notiCase);
         Member leader = memberRepository.findById(newApplicantNotiDto.getLeaderId())
@@ -108,7 +121,6 @@ public class NotificationService {
     }
 
     // 제안 수락 거절 알림
-    @Transactional
     public void sendNotification(NotificationCase notiCase, NewOfferResultNotiDto newOfferResultNotiDto) {
         log.info("{} NOTIFICATION SEND", notiCase);
         Member leader = memberRepository.findById(newOfferResultNotiDto.getLeaderId())
@@ -140,7 +152,6 @@ public class NotificationService {
     }
 
     // 새로운 팀원 알림
-    @Transactional
     public void sendNotification(NotificationCase notiCase, NewTeamMemberNotiDto newTeamMemberNotiDto) {
         log.info("{} NOTIFICATION SEND", notiCase);
         String from = newTeamMemberNotiDto.getTeamName();
@@ -164,7 +175,6 @@ public class NotificationService {
     }
 
     // 새로운 지원 결과 알림
-    @Transactional
     public void sendNotification(NotificationCase notiCase, NewApplyResultNotiDto newApplyResultNotiDto) {
         log.info("{} NOTIFICATION SEND", notiCase);
         Member member = memberRepository.findById(newApplyResultNotiDto.getApplicantId())
@@ -190,7 +200,6 @@ public class NotificationService {
     }
 
     // 알림 불러오기 메서드
-    @Transactional
     public NotificationListDto getNotifications(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));

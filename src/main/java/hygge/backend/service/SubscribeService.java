@@ -4,12 +4,10 @@ import hygge.backend.dto.subject.SubjectDto;
 import hygge.backend.dto.subscribe.SubscribeDto;
 import hygge.backend.dto.notification.NewSubscriberNotiDto;
 import hygge.backend.dto.subscribe.SubscribeResponse;
-import hygge.backend.entity.Member;
-import hygge.backend.entity.NotificationCase;
-import hygge.backend.entity.Subject;
-import hygge.backend.entity.Subscribe;
+import hygge.backend.entity.*;
 import hygge.backend.error.exception.BusinessException;
 import hygge.backend.repository.MemberRepository;
+import hygge.backend.repository.ResumeRepository;
 import hygge.backend.repository.SubjectRepository;
 import hygge.backend.repository.SubscribeRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,7 @@ public class SubscribeService {
     private final SubjectRepository subjectRepository;
 
     private final NotificationService notificaitonService;
+    private final ResumeRepository resumeRepository;
 
     @Transactional
     public SubscribeDto subscribe(SubscribeDto subscribeDto) {
@@ -76,7 +75,11 @@ public class SubscribeService {
         Subscribe subscribe = subscribeRepository.findByMemberIdAndSubjectId(member.getId(), subject.getId())
                 .orElseThrow(() -> new BusinessException(CANNOT_FIND_SUBSCRIBE));
 
+        Resume resume = resumeRepository.findBySubjectIdAndMemberId(subject.getId(), member.getId())
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_RESUME));
+
         subscribeRepository.delete(subscribe);
+        resumeRepository.delete(resume);
 
         return subscribeDto;
     }
