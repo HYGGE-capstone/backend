@@ -24,7 +24,8 @@ jobs:
     steps:
     - uses: samin/mysql-action@v1
       with:
-        mysql database: 'jdbc:mysql://hygge-db-1.cm6sq9tg7yyg.ap-northeast-2.rds.amazonaws.com:3306/hygge_db?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul'
+        character set server: 'utf8'
+        mysql database: 'hygge-db'
         mysql user: 'admin'
         mysql password: ${{ secrets.SQL_PASSWORD }}
 
