@@ -18,7 +18,7 @@ JWT 를 효율적으로 관리하기 위해 Redis 를 이용하였습니다.<br/
 API 를 관리하기 위해 Swagger 를 이용하였습니다. <br/>
 현재 AWS EC2 를 이용해 백엔드 API 서버를 배포하고 있는 중이며,  
 개발한 API 는 아래 주소에서 확인하실 수 있습니다.<br/>  
-API 명세 : http://ajougoodteam.com:8080/api-docs
+API 명세 : http://ajougoodteam.com/api-docs
 <br/>  
 
 # 패키지 구조
