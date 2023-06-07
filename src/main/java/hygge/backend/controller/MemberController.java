@@ -107,10 +107,9 @@ public class MemberController {
         return ResponseEntity.ok(memberService.reissue(request));
     }
 
-    // 아이디 찾기 메서드
-//    @GetMapping("/findid/{email}")
-//    public ResponseEntity<?> findId(@PathVariable String email) {
-//        return memberService.findId(email);
-//    }
+    @GetMapping("/deploy/test")
+    public String deployTest() {
+        return "deploy test";
+    }
 }
 
