@@ -25,6 +25,6 @@ public class OfferNotiDto {
         this.to = to;
 
         this.from = subjectName + "(" + subjectCode + ")";
-        this.msg = "팀 " + teamName + " 에서 합류 제안을 보냈습니다.";
+        this.msg = "팀 \"" + teamName + "\" 에서 합류 제안을 보냈습니다.";
     }
 }
