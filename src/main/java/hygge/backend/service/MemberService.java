@@ -39,6 +39,7 @@ import static hygge.backend.error.exception.ExceptionInfo.*;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -49,7 +50,6 @@ public class MemberService {
 
     private final SchoolRepository schoolRepository;
 
-    @Transactional
     public SignupResponse signup(SignupRequest signupRequest) throws BusinessException {
         if (memberRepository.existsByEmail(signupRequest.getEmail())) {  // 이메일 중복
             throw new BusinessException(REGISTERED_EMAIL);
@@ -101,7 +101,6 @@ public class MemberService {
         }
     }
 
-    @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
         log.info("MemberService.login()");
         // 1. Login ID/PW 기반으로 AuthenticationToken 생성
@@ -121,7 +120,6 @@ public class MemberService {
                                                     tokenDto.getRefreshTokenExpiresIn(),
                                                     TimeUnit.MILLISECONDS);
 
-
         Member loginMember = memberRepository.findByLoginId(loginRequest.getLoginId())
                 .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
@@ -137,7 +135,6 @@ public class MemberService {
                 .build();
     }
 
-    @Transactional
     public LogoutResponse logout(LogoutRequest request){
         log.info("MemberService.logout()");
 
@@ -159,7 +156,6 @@ public class MemberService {
                 .build();
     }
 
-    @Transactional
     public TokenDto reissue(ReissueDto request) {
         log.info("MemberService.reissue()");
         // 1. 리프레쉬 토큰 검증
