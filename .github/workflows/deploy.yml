@@ -33,6 +33,12 @@ jobs:
         java-version: '11'
 
     # (3) Gradle build (Test 제외)
+    - uses: actions/checkout@v3
+    - run: touch ./src/main/resources/application.properties
+    - run: pwd
+    - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
+    - run: cat ./src/main/resources/application.properties
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
