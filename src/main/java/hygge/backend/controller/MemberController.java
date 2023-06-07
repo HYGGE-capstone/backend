@@ -109,7 +109,7 @@ public class MemberController {
 
     @GetMapping("/deploy/test")
     public String deployTest() {
-        return "deploy test";
+        return "deploy test2";
     }
 }
 
