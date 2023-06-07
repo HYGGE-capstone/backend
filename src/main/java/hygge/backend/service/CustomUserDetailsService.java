@@ -16,7 +16,7 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class gitCustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
