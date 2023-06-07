@@ -1,5 +1,6 @@
 package hygge.backend.service;
 
+import hygge.backend.dto.notification.KickOutNotiDto;
 import hygge.backend.dto.team.*;
 import hygge.backend.dto.notification.NewTeamNotiDto;
 import hygge.backend.entity.*;
@@ -230,6 +231,11 @@ public class TeamService {
 
         team.leave();
         memberTeamRepository.delete(memberTeam);
+
+        // 알림
+        Subject subject = team.getSubject();
+        notificaitonService.sendNotification(
+                new KickOutNotiDto(subject.getName(), subject.getCode(), team.getName(), kickOutMember.getId()));
 
         return kickOutMemberDto;
     }

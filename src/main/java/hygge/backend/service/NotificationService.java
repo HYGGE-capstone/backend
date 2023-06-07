@@ -57,7 +57,7 @@ public class NotificationService {
         }
     }
 
-    // 팀 합류제안 알림
+    // 팀 합류 제안 알림
     public void sendNotification(OfferNotiDto offerNotiDto) {
         Member to = memberRepository.findById(offerNotiDto.getTo())
                 .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
@@ -66,6 +66,21 @@ public class NotificationService {
                 .to(to)
                 .from(offerNotiDto.getFrom())
                 .content(offerNotiDto.getMsg())
+                .isOpened(false)
+                .build();
+
+        notificationRepository.save(notification);
+    }
+
+    // 팀 추방 알림
+    public void sendNotification(KickOutNotiDto kickOutNotiDto) {
+        Member to = memberRepository.findById(kickOutNotiDto.getTo())
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+
+        Notification notification = Notification.builder()
+                .to(to)
+                .from(kickOutNotiDto.getFrom())
+                .content(kickOutNotiDto.getMsg())
                 .isOpened(false)
                 .build();
 
