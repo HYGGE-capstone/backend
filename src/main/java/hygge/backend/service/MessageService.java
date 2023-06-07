@@ -35,6 +35,8 @@ public class MessageService {
         Member to = memberRepository.findById(request.getTo())
                 .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
 
+        if(from.getId().equals(to.getId())) throw new BusinessException(ExceptionInfo.CANNOT_SEND_TO_ME);
+
         MessageRoom fromMessageRoom = messageRoomRepository.findByFromAndTo(from, to)
                 .orElseGet(() -> new MessageRoom(from, to, false));
 

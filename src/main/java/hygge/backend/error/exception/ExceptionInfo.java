@@ -57,7 +57,10 @@ public enum ExceptionInfo {
 
     // 공지
     ALREADY_HAVE_NOTICE("NT-000", "공지가 이미 존재합니다."),
-    NOT_HAVE_NOTICE("NT-001", "등록된 공지가 없습니다.");
+    NOT_HAVE_NOTICE("NT-001", "등록된 공지가 없습니다."),
+
+    // 쪽지
+    CANNOT_SEND_TO_ME("MG-000", "스스로에게 쪽지를 보낼 수 없습니다.");
 
     private final String code;
     private final String msg;
