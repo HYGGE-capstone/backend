@@ -2,6 +2,7 @@
 ## 아주좋은팀
 안녕하세요.<br/>
 팀/팀원 매칭 플랫폼 '아주좋은팀' 을 개발한 팀 HYGGE 입니다.<br/>
+서비스 이용 : ajougoodteam.com
 
 ## HYGGE 백엔드 팀
 | role | name | part | email |
