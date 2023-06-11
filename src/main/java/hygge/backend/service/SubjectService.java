@@ -56,6 +56,15 @@ public class SubjectService {
                 .stream().map(subject -> new SubjectDto(subject)).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<SubjectDto> getSubjectsByAdminId(Long adminId) {
+        Member admin = memberRepository.findById(adminId)
+                .orElseThrow(() -> new BusinessException(ExceptionInfo.CANNOT_FIND_MEMBER));
+
+        return subjectRepository.findBySchool(admin.getSchool())
+                .stream().map(subject -> new SubjectDto(subject)).collect(Collectors.toList());
+    }
+
     @Transactional
     public SubjectDto enrollSubject(SubjectNoIdDto subjectNoIdDto) {
         School school = schoolRepository.findById(subjectNoIdDto.getSchoolId())

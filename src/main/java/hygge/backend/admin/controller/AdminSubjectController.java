@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Tag(name = "관리자 - 과목", description = "과목(관리자) 관련 API 입니다.")
@@ -35,6 +36,12 @@ public class AdminSubjectController {
     @GetMapping
     public List<SubjectDto> getSubjectsBySchoolId(@RequestParam Long schoolId) {
         return subjectService.getSubjectsBySchoolId(schoolId);
+    }
+
+    @GetMapping("/admin")
+    public List<SubjectDto> getSubjectsByAdminId(Principal principal) {
+        Long adminId = Long.parseLong(principal.getName());
+        return subjectService.getSubjectsByAdminId(adminId);
     }
 
      @Operation(summary = "과목 추가 메서드", description = "과목 추가 메서드입니다.")

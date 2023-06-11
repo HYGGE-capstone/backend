@@ -133,6 +133,23 @@ public class TeamService {
     }
 
     @Transactional(readOnly = true)
+    public TeamResponse searchTeamsByAdminId(Long adminId) {
+        Member admin = memberRepository.findById(adminId)
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+
+        List<Subject> subjects = subjectRepository.findBySchool(admin.getSchool());
+
+        List<TeamDto> teams = new ArrayList<>();
+
+        for (Subject subject : subjects) {
+            for (Team team : subject.getTeams()) {
+                teams.add(new TeamDto(team, false));
+            }
+        }
+        return TeamResponse.builder().teams(teams).build();
+    }
+
+    @Transactional(readOnly = true)
     public GetMembersByTeamResponse getMembersByTeam(Long teamId) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new BusinessException(CANNOT_FIND_TEAM));
