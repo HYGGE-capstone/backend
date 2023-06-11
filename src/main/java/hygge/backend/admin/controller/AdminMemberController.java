@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 
 @Tag(name = "관리자 - 회원", description = "회원(관리자) 관련 API 입니다.")
@@ -37,7 +38,8 @@ public class AdminMemberController {
 
     })
     @GetMapping
-    public List<MemberDto> getMembersBySchoolId(@RequestParam Long schoolId) {
-        return memberService.getMembersBySchoolId(schoolId);
+    public List<MemberDto> getMembersBySchoolId(Principal principal) {
+        Long adminId = Long.parseLong(principal.getName());
+        return memberService.getMembersBySchoolId(adminId);
     }
 }

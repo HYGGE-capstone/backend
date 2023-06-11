@@ -187,11 +187,11 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberDto> getMembersBySchoolId(Long schoolId) {
-        School school = schoolRepository.findById(schoolId)
-                .orElseThrow(() -> new BusinessException(CANNOT_FIND_SCHOOL));
+    public List<MemberDto> getMembersBySchoolId(Long adminId) {
+        Member admin = memberRepository.findById(adminId)
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
 
-        return memberRepository.findBySchool(school)
+        return memberRepository.findBySchool(admin.getSchool())
                 .stream().map(member -> new MemberDto(member)).collect(Collectors.toList());
     }
 }
