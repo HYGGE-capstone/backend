@@ -26,6 +26,12 @@ public class LoginResponse {
     @Schema(description = "역할", defaultValue = "ROLE_USER")
     private String role;
 
+    @Schema(description = "학교 아이디", defaultValue = "2000")
+    private Long schoolId;
+
+    @Schema(description = "학교 이름", defaultValue = "아주대학교")
+    private String schoolName;
+
     private Long accessTokenExpiresIn;
 
     private Long refreshTokenExpiresIn;

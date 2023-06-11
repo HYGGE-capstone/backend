@@ -124,6 +124,7 @@ public class MemberService {
 
         Member loginMember = memberRepository.findByLoginId(loginRequest.getLoginId())
                 .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+        School school = loginMember.getSchool();
 
         // 5. 토큰 발급
         return LoginResponse.builder()
@@ -134,6 +135,8 @@ public class MemberService {
                 .role(loginMember.getRole().toString())
                 .accessTokenExpiresIn(tokenDto.getAccessTokenExpiresIn())
                 .refreshTokenExpiresIn(tokenDto.getRefreshTokenExpiresIn())
+                .schoolId(school.getId())
+                .schoolName(school.getSchoolName())
                 .build();
     }
 
