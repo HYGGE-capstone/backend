@@ -42,7 +42,7 @@ public class AdminMemberController {
     }
 
     @PostMapping("/nickname")
-    public MemberDto changeMemberNickname(ChangeNickNameDto changeNickNameDto) {
+    public MemberDto changeMemberNickname(@RequestBody ChangeNickNameDto changeNickNameDto) {
         return memberService.changeNickname(changeNickNameDto);
     }
 }
