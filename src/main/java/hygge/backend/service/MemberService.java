@@ -1,15 +1,7 @@
 package hygge.backend.service;
 
 import hygge.backend.dto.jwt.TokenDto;
-import hygge.backend.dto.member.MemberDto;
-import hygge.backend.dto.member.LogoutRequest;
-import hygge.backend.dto.member.ReissueDto;
-import hygge.backend.dto.member.LogoutResponse;
-import hygge.backend.dto.member.LoginRequest;
-import hygge.backend.dto.member.SignupRequest;
-import hygge.backend.dto.member.LoginIdResponse;
-import hygge.backend.dto.member.LoginResponse;
-import hygge.backend.dto.member.SignupResponse;
+import hygge.backend.dto.member.*;
 import hygge.backend.entity.Member;
 import hygge.backend.entity.Role;
 import hygge.backend.entity.School;
@@ -193,5 +185,15 @@ public class MemberService {
 
         return memberRepository.findBySchool(admin.getSchool())
                 .stream().map(member -> new MemberDto(member)).collect(Collectors.toList());
+    }
+
+    public MemberDto changeNickname(ChangeNickNameDto changeNickNameDto) {
+        Member member = memberRepository.findById(changeNickNameDto.getMemberId())
+                .orElseThrow(() -> new BusinessException(CANNOT_FIND_MEMBER));
+
+        member.changeNickname(changeNickNameDto.getNickname());
+
+        Member savedMember = memberRepository.save(member);
+        return new MemberDto(savedMember);
     }
 }

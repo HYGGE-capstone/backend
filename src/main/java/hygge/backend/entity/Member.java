@@ -69,4 +69,7 @@ public class Member {
     public void deleteSubscribe(Subscribe subscribe) {
         this.subscribes.remove(subscribe);
     }
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
